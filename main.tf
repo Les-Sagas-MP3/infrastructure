@@ -12,7 +12,6 @@ provider "aws" {
   region  = "eu-west-3"
 }
 
-resource "aws_instance" "les-sagas-mp3" {
-  ami           = "ami-0de12f76efe134f2f"
-  instance_type = "t2.micro"
+output "lessagasmp3_ip" {
+  value = aws_eip.lessagasmp3.public_ip
 }
