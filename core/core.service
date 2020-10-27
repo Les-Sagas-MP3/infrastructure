@@ -1,0 +1,11 @@
+[Unit]
+Description=Les Sagas MP3 - Daemon
+
+[Service]
+Type=forking
+ExecStart=/opt/les-sagas-mp3/core/core.sh start
+ExecStop=/opt/les-sagas-mp3/core/core.sh stop
+ExecReload=/opt/les-sagas-mp3/core/core.sh reload
+
+[Install]
+WantedBy=multi-user.target
