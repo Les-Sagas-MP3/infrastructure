@@ -3,6 +3,8 @@ Description=Les Sagas MP3 - Daemon
 
 [Service]
 Type=forking
+User=lessagasmp3
+Group=lessagasmp3
 ExecStart=/opt/les-sagas-mp3/core/core.sh start
 ExecStop=/opt/les-sagas-mp3/core/core.sh stop
 ExecReload=/opt/les-sagas-mp3/core/core.sh reload

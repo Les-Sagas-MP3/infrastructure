@@ -4,14 +4,17 @@ function d_start ()
 {
 	echo "Les Sagas MP3 Core: starting service"
 	BASEDIR=$(dirname "$0")
+	source /etc/bashrc
 	cd "$BASEDIR" &&
-	nohup java -Dconfig.location=application.properties -jar core.jar & echo $! > /var/run/les-sagas-mp3-core.pid & sleep 5
+	nohup java -Dconfig.location=application.properties -jar core.jar & echo $! > $BASEDIR/les-sagas-mp3-core.pid & sleep 5
 }
 
 function d_stop ()
 {
 	echo "Les Sagas MP3 Core: stopping service"
-	cat /var/run/les-sagas-mp3-core.pid | xargs kill -9
+	BASEDIR=$(dirname "$0")
+	cat $BASEDIR/les-sagas-mp3-core.pid | xargs kill -9
+	rm $BASEDIR/les-sagas-mp3-core.pid
  }
 
 function d_status ( )
