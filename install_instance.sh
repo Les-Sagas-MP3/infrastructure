@@ -10,6 +10,7 @@ JAVA_INSTALL_DIR="/opt/java"
 INSTALL_DIR="/opt/les-sagas-mp3"
 DB_INSTALL_DIR="$INSTALL_DIR/db"
 CORE_INSTALL_DIR="$INSTALL_DIR/core"
+APP_INSTALL_DIR="$INSTALL_DIR/app"
 
 CURRENT_DIR=$(dirname $(realpath $0))
 echo "Run configuration in : $CURRENT_DIR"
@@ -47,10 +48,10 @@ echo "JAVA_HOME: $JAVA_HOME"
 echo "export JAVA_HOME=$JAVA_HOME" >> /etc/bashrc
 echo "export PATH=$PATH" >> /etc/bashrc
 
-# Stop core if running
-if (( $(ps -ef | grep -v grep | grep core.jar | wc -l) > 0 )); then
-    systemctl stop les-sagas-mp3-core
+# Install core
+if (( $(ps -ef | grep -v grep | grep core.jar | wc -l) <= 0 )); then
+    $CURRENT_DIR/core/install_core.sh $CORE_INSTALL_DIR
 fi
 
-# Install core
-$CURRENT_DIR/core/install_core.sh $CORE_INSTALL_DIR
+# Install nginx & app
+$CURRENT_DIR/nginx/install_nginx.sh $APP_INSTALL_DIR

@@ -11,10 +11,6 @@ POSTGRES_INIT_PASSWORD=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
 LSM_DB_INSTALL_DIR=$1
 LSM_DB_PASSWORD="lNOYLDKANm0oKOB1kPJk"
 
-# Create tablespace location
-mkdir -p $LSM_DB_INSTALL_DIR
-chown postgres:postgres $LSM_DB_INSTALL_DIR
-
 # Configure yum repository
 cat $CURRENT_DIR/pgdg.repo >> /etc/yum.repos.d/pgdg.repo
 
@@ -31,6 +27,10 @@ systemctl restart postgresql-12
 # Set postgres credentials
 runuser -l postgres -c "psql -U postgres -c \"ALTER USER POSTGRES WITH PASSWORD '$POSTGRES_INIT_PASSWORD'\""
 echo "DB created successfully. Default password for postgres : $POSTGRES_INIT_PASSWORD"
+
+# Create tablespace location
+mkdir -p $LSM_DB_INSTALL_DIR
+chown postgres:postgres $LSM_DB_INSTALL_DIR
 
 # Create LSM database
 runuser -l postgres -c "psql -U postgres -c \"CREATE USER lessagasmp3 WITH PASSWORD '$LSM_DB_PASSWORD'\""
