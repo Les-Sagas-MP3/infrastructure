@@ -11,14 +11,10 @@ spring.datasource.password=<Password for LSM database>
 jwt.secret=<A random salt for JWT auth>
 ```
 
- - `db/install_db.sh` :
+ - `conf_instance.sh` :
 
-```bash
-[...]
-LSM_DB_PASSWORD="<Password for LSM database>"
-[...]
-```
-
+Modify each variable according to desired infrastructure
+ 
 ## Installation
 
 ```bash
