@@ -37,6 +37,20 @@ if ! id github &>/dev/null; then
     chmod 600 $GITHUB_HOME/.ssh/authorized_keys
 fi
 
+# Mount file storage
+if (( $(df -h | grep lessagasmp3 | wc -l) <= 0 )); then
+    amazon-linux-extras install epel
+    yum install s3fs-fuse -y
+    mkdir -p $STORAGE_FOLDER
+    mv passwd-s3fs /etc/passwd-s3fs
+    chown root:root /etc/passwd-s3fs
+    chmod 640 /etc/passwd-s3fs
+    echo "user_allow_other" > /etc/fuse.conf
+    chmod 777 $STORAGE_FOLDER
+    s3fs lessagasmp3 $STORAGE_FOLDER -o url="https://s3-eu-west-3.amazonaws.com" -o endpoint=eu-west-3 -o dbglevel=info -f -o curldbg > /dev/null 2>&1 &
+    echo "s3fs#lessagasmp3 $STORAGE_FOLDER fuse _netdev,allow_other,url=https://s3.amazonaws.com 0 0" >> /etc/fstab
+fi
+
 # Install DB
 if (( $(ps -ef | grep -v grep | grep pgsql-12 | wc -l) <= 0 )); then
     $CURRENT_DIR/db/install_db.sh
@@ -67,3 +81,5 @@ fi
 
 # Install deploy scripts
 $CURRENT_DIR/deploy/install_deploy.sh
+
+reboot

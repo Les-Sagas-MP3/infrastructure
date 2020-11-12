@@ -9,6 +9,8 @@ JAVA_INSTALL_DIR="/opt/java"
 
 INSTALL_DIR="/opt/les-sagas-mp3"
 
+STORAGE_FOLDER=/mnt/s3/lessagasmp3
+
 DB_INSTALL_DIR="$INSTALL_DIR/db"
 DB_PASSWORD="lNOYLDKANm0oKOB1kPJk"
 

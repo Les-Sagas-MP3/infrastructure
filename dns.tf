@@ -1,6 +1,9 @@
 
 resource "aws_route53_zone" "lessagasmp3" {
   name = "les-sagas-mp3.fr"
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_route53_record" "main" {

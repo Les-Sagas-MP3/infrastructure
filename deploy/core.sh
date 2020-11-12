@@ -16,10 +16,6 @@ sudo systemctl stop les-sagas-mp3-core
 
 # Feed target directory
 wget -nv $CORE_URL -O $CORE_INSTALL_DIR/core.jar
-chmod 755 $CORE_INSTALL_DIR/core.jar
-
-# Grant all install directory to user
-chown -R lessagasmp3:lessagasmp3 $CORE_INSTALL_DIR
 
 # Run the app
 sudo systemctl start les-sagas-mp3-core

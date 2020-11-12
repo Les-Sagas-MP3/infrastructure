@@ -11,7 +11,7 @@ echo "Terraform ended successfully"
 
 # Get output from Terraform
 TF_OUTPUT=$(terraform output)
-INSTANCE_IP=$(echo $TF_OUTPUT | sed 's/lessagasmp3_ip = //g')
+INSTANCE_IP=$(echo $TF_OUTPUT | sed 's/lessagasmp3_ip = //g' | sed 's/ name_servers = .*//g')
 echo "Instance public IP: ${INSTANCE_IP}"
 
 # Prepare file copies to instance
@@ -31,6 +31,9 @@ ssh ec2-user@$INSTANCE_IP "mkdir $DEPLOY_DEPOSIT_PATH"
 
 # Copy ssh keys
 scp "D:\\Users\\Thomah\\Keys\\Les Sagas MP3\\github\\id_rsa.pub" ec2-user@$INSTANCE_IP:$DEPOSIT_PATH/github.pub
+
+# Copy AWS credentials
+scp "C:\Users\\Thomah\\.aws\\passwd-s3fs" ec2-user@$INSTANCE_IP:$DEPOSIT_PATH/passwd-s3fs
 
 # Copy DB files
 scp db/install_db.sh ec2-user@$INSTANCE_IP:$DB_DEPOSIT_PATH/install_db.sh
