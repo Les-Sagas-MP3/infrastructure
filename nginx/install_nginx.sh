@@ -30,9 +30,14 @@ mkdir -p $APP_INSTALL_DIR
 wget -nv $APP_URL -O $CURRENT_DIR/les-sagas-mp3.tar.gz
 tar -xf $CURRENT_DIR/les-sagas-mp3.tar.gz
 cp -Rf dist/* $APP_INSTALL_DIR
+chmod -R 775 $APP_INSTALL_DIR
+chown -R lessagasmp3:lessagasmp3 $APP_INSTALL_DIR
+
+# Grant nginx to lessagasmp3 group
+usermod -aG lessagasmp3 nginx
 
 # Make symlink to storage
 mkdir -p $STORAGE_FOLDER/img
 chown -R lessagasmp3:lessagasmp3 $STORAGE_FOLDER/img
-chmod -R 664 $STORAGE_FOLDER/img
+chmod -R 764 $STORAGE_FOLDER/img
 ln -s $STORAGE_FOLDER/img $APP_INSTALL_DIR/img

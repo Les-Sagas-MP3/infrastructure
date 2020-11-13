@@ -16,9 +16,13 @@ sudo systemctl stop nginx
 
 # Install app
 rm -rf $APP_INSTALL_DIR/*
+rm -rf $CURRENT_DIR/dist
 wget -nv $APP_URL -O $CURRENT_DIR/les-sagas-mp3.tar.gz
-tar -xf $CURRENT_DIR/les-sagas-mp3.tar.gz
-cp -Rf dist/* $APP_INSTALL_DIR
+tar -xf $CURRENT_DIR/les-sagas-mp3.tar.gz -C $CURRENT_DIR
+ln -s $STORAGE_FOLDER/img $APP_INSTALL_DIR/img
+mv $CURRENT_DIR/dist/img/* $STORAGE_FOLDER/img
+rm -r $CURRENT_DIR/dist/img
+cp -Rf $CURRENT_DIR/dist/* $APP_INSTALL_DIR
 
 # Start nginx
 sudo systemctl start nginx
