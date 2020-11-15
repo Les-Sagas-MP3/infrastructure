@@ -14,6 +14,8 @@ STORAGE_FOLDER=/mnt/s3/lessagasmp3
 DB_INSTALL_DIR="$INSTALL_DIR/db"
 DB_PASSWORD="lNOYLDKANm0oKOB1kPJk"
 
+BACKUP_INSTALL_DIR="$INSTALL_DIR/backup"
+
 CORE_INSTALL_DIR="$INSTALL_DIR/core"
 CORE_URL="https://github.com/Les-Sagas-MP3/core/releases/download/0.2.12/core-exec.jar"
 

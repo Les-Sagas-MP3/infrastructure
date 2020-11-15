@@ -56,18 +56,28 @@ if (( $(ps -ef | grep -v grep | grep pgsql-12 | wc -l) <= 0 )); then
     $CURRENT_DIR/db/install_db.sh
 fi
 
-# Retrieve Java package
-wget -nv $JAVA_ARCHIVE_URL -O $JAVA_ARCHIVE_NAME
-echo "$JAVA_CHECKSUM $JAVA_ARCHIVE_NAME" | sha256sum --check
-mkdir -p $JAVA_INSTALL_DIR
-tar -xf $JAVA_ARCHIVE_NAME -C $JAVA_INSTALL_DIR
+# Install backup program
+if [ ! -d "$BACKUP_INSTALL_DIR" ]; then
+    $CURRENT_DIR/backup/install_backup.sh
+fi
 
-# Set environment variables
-JAVA_HOME="$JAVA_INSTALL_DIR/$(ls -t $JAVA_INSTALL_DIR | head -n1)"
-PATH=$PATH:$JAVA_HOME/bin
-echo "JAVA_HOME: $JAVA_HOME"
-echo "export JAVA_HOME=$JAVA_HOME" >> /etc/bashrc
-echo "export PATH=$PATH" >> /etc/bashrc
+# Install Java
+if [ ! -d "$JAVA_INSTALL_DIR" ]; then
+
+    # Get package
+    wget -nv $JAVA_ARCHIVE_URL -O $JAVA_ARCHIVE_NAME
+    echo "$JAVA_CHECKSUM $JAVA_ARCHIVE_NAME" | sha256sum --check
+    mkdir -p $JAVA_INSTALL_DIR
+    tar -xf $JAVA_ARCHIVE_NAME -C $JAVA_INSTALL_DIR
+
+    # Set environment variables
+    JAVA_HOME="$JAVA_INSTALL_DIR/$(ls -t $JAVA_INSTALL_DIR | head -n1)"
+    PATH=$PATH:$JAVA_HOME/bin
+    echo "JAVA_HOME: $JAVA_HOME"
+    echo "export JAVA_HOME=$JAVA_HOME" >> /etc/bashrc
+    echo "export PATH=$PATH" >> /etc/bashrc
+
+fi
 
 # Install core
 if (( $(ps -ef | grep -v grep | grep core.jar | wc -l) <= 0 )); then
@@ -80,6 +90,8 @@ if (( $(ps -ef | grep -v grep | grep nginx | wc -l) <= 0 )); then
 fi
 
 # Install deploy scripts
-$CURRENT_DIR/deploy/install_deploy.sh
+if [ ! -d "$DEPLOY_INSTALL_DIR" ]; then
+    $CURRENT_DIR/deploy/install_deploy.sh
+fi
 
 reboot
