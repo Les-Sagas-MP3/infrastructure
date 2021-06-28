@@ -2,9 +2,9 @@
 
 set -eE
 
-JAVA_ARCHIVE_NAME="openjdk-15.0.1_linux-x64_bin.tar.gz"
-JAVA_ARCHIVE_URL="https://download.java.net/java/GA/jdk15.0.1/51f4f36ad4ef43e39d0dfdbaf6549e32/9/GPL/openjdk-15.0.1_linux-x64_bin.tar.gz"
-JAVA_CHECKSUM="83ec3a7b1649a6b31e021cde1e58ab447b07fb8173489f27f427e731c89ed84a"
+JAVA_ARCHIVE_NAME="openjdk-16.0.1_linux-x64_bin.tar.gz"
+JAVA_ARCHIVE_URL="https://download.java.net/java/GA/jdk16.0.1/7147401fd7354114ac51ef3e1328291f/9/GPL/openjdk-16.0.1_linux-x64_bin.tar.gz"
+JAVA_CHECKSUM="b1198ffffb7d26a3fdedc0fa599f60a0d12aa60da1714b56c1defbce95d8b235"
 JAVA_INSTALL_DIR="/opt/java"
 
 INSTALL_DIR="/opt/les-sagas-mp3"
