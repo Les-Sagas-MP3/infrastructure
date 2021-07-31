@@ -23,7 +23,7 @@ ln -s $STORAGE_FOLDER/img $APP_INSTALL_DIR/img
 mv $CURRENT_DIR/dist/img/* $STORAGE_FOLDER/img
 rm -r $CURRENT_DIR/dist/img
 cp -Rf $CURRENT_DIR/dist/* $APP_INSTALL_DIR
-cp $CURRENT_DIR/app/config.json $APP_INSTALL_DIR/assets
+cp $CURRENT_DIR/appconfig.json $APP_INSTALL_DIR/assets/config.json
 
 # Start nginx
 sudo systemctl start nginx

@@ -63,12 +63,12 @@ scp nginx/app.conf ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/app.conf
 scp nginx/www.conf ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/www.conf
 
 # Copy app files
-scp app/config.json ec2-user@$INSTANCE_IP:$APP_DEPOSIT_PATH/config.json
 
 # Copy deploy script
 scp deploy/install_deploy.sh ec2-user@$INSTANCE_IP:$DEPLOY_DEPOSIT_PATH/install_deploy.sh
 scp deploy/core.sh ec2-user@$INSTANCE_IP:$DEPLOY_DEPOSIT_PATH/core.sh
 scp deploy/app.sh ec2-user@$INSTANCE_IP:$DEPLOY_DEPOSIT_PATH/app.sh
+scp deploy/appconfig.json ec2-user@$INSTANCE_IP:$DEPLOY_DEPOSIT_PATH/appconfig.json
 
 # Copy main script
 scp conf_instance.sh ec2-user@$INSTANCE_IP:$DEPOSIT_PATH
