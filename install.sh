@@ -20,6 +20,7 @@ DB_DEPOSIT_PATH=$DEPOSIT_PATH/db
 BACKUP_DEPOSIT_PATH=$DEPOSIT_PATH/backup
 CORE_DEPOSIT_PATH=$DEPOSIT_PATH/core
 NGINX_DEPOSIT_PATH=$DEPOSIT_PATH/nginx
+APP_DEPOSIT_PATH=$DEPOSIT_PATH/app
 DEPLOY_DEPOSIT_PATH=$DEPOSIT_PATH/deploy
 
 # Prepare destination paths
@@ -29,6 +30,7 @@ ssh ec2-user@$INSTANCE_IP "mkdir $DB_DEPOSIT_PATH"
 ssh ec2-user@$INSTANCE_IP "mkdir $BACKUP_DEPOSIT_PATH"
 ssh ec2-user@$INSTANCE_IP "mkdir $CORE_DEPOSIT_PATH"
 ssh ec2-user@$INSTANCE_IP "mkdir $NGINX_DEPOSIT_PATH"
+ssh ec2-user@$INSTANCE_IP "mkdir $APP_DEPOSIT_PATH"
 ssh ec2-user@$INSTANCE_IP "mkdir $DEPLOY_DEPOSIT_PATH"
 
 # Copy ssh keys
@@ -42,7 +44,7 @@ scp db/install_db.sh ec2-user@$INSTANCE_IP:$DB_DEPOSIT_PATH/install_db.sh
 scp db/pgdg.repo ec2-user@$INSTANCE_IP:$DB_DEPOSIT_PATH/pgdg.repo
 scp db/pg_hba.conf ec2-user@$INSTANCE_IP:$DB_DEPOSIT_PATH/pg_hba.conf
 
-# Copy DB files
+# Copy backup files
 scp backup/install_backup.sh ec2-user@$INSTANCE_IP:$BACKUP_DEPOSIT_PATH/install_backup.sh
 scp backup/conf.sh ec2-user@$INSTANCE_IP:$BACKUP_DEPOSIT_PATH/conf.sh
 scp backup/backup.sh ec2-user@$INSTANCE_IP:$BACKUP_DEPOSIT_PATH/backup.sh
@@ -59,6 +61,9 @@ scp nginx/root.conf ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/root.conf
 scp nginx/api.conf ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/api.conf
 scp nginx/app.conf ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/app.conf
 scp nginx/www.conf ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/www.conf
+
+# Copy app files
+scp app/config.json ec2-user@$INSTANCE_IP:$APP_DEPOSIT_PATH/config.json
 
 # Copy deploy script
 scp deploy/install_deploy.sh ec2-user@$INSTANCE_IP:$DEPLOY_DEPOSIT_PATH/install_deploy.sh
