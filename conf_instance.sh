@@ -17,10 +17,10 @@ DB_PASSWORD="lNOYLDKANm0oKOB1kPJk"
 BACKUP_INSTALL_DIR="$INSTALL_DIR/backup"
 
 CORE_INSTALL_DIR="$INSTALL_DIR/core"
-CORE_URL="https://github.com/Les-Sagas-MP3/core/releases/download/0.2.12/core-exec.jar"
+CORE_URL="https://github.com/Les-Sagas-MP3/core/releases/download/0.4.1/core-exec.jar"
 
 APP_INSTALL_DIR="$INSTALL_DIR/app"
 APP_ADMIN_EMAIL="thomas.hingant@posteo.net"
-APP_URL="https://github.com/Les-Sagas-MP3/app/releases/download/0.2.0/les-sagas-mp3.tar.gz"
+APP_URL="https://github.com/Les-Sagas-MP3/app/releases/download/0.3.3/les-sagas-mp3.tar.gz"
 
 DEPLOY_INSTALL_DIR="$INSTALL_DIR/deploy"

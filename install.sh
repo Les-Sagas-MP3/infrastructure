@@ -54,6 +54,7 @@ scp core/install_core.sh ec2-user@$INSTANCE_IP:$CORE_DEPOSIT_PATH/install_core.s
 scp core/application.properties ec2-user@$INSTANCE_IP:$CORE_DEPOSIT_PATH/application.properties
 scp core/core.sh ec2-user@$INSTANCE_IP:$CORE_DEPOSIT_PATH/core.sh
 scp core/core.service ec2-user@$INSTANCE_IP:$CORE_DEPOSIT_PATH/core.service
+scp core/google_application_credentials.json ec2-user@$INSTANCE_IP:$CORE_DEPOSIT_PATH/google_application_credentials.json
 
 # Copy nginx files
 scp nginx/install_nginx.sh ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/install_nginx.sh
@@ -61,8 +62,6 @@ scp nginx/root.conf ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/root.conf
 scp nginx/api.conf ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/api.conf
 scp nginx/app.conf ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/app.conf
 scp nginx/www.conf ec2-user@$INSTANCE_IP:$NGINX_DEPOSIT_PATH/www.conf
-
-# Copy app files
 
 # Copy deploy script
 scp deploy/install_deploy.sh ec2-user@$INSTANCE_IP:$DEPLOY_DEPOSIT_PATH/install_deploy.sh

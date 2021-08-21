@@ -8,6 +8,7 @@ source $CURRENT_DIR/../conf_instance.sh
 mkdir -p $CORE_INSTALL_DIR
 cp -f $CURRENT_DIR/application.properties $CORE_INSTALL_DIR/application.properties
 cp -f $CURRENT_DIR/core.sh $CORE_INSTALL_DIR/core.sh
+cp -f $CURRENT_DIR/google_application_credentials.json $CORE_INSTALL_DIR/google_application_credentials.json
 cp -f $CURRENT_DIR/core.service /etc/systemd/system/les-sagas-mp3-core.service
 wget -nv $CORE_URL -O $CORE_INSTALL_DIR/core.jar
 chmod 775 $CORE_INSTALL_DIR/core.jar
