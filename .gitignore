@@ -1,2 +1,4 @@
-.terraform
-*.tfstate*
+terraform/.plan/*.tfplan
+terraform/.plan/*.json
+terraform/.terraform
+terraform/*.tfstate*
