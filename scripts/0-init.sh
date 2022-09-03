@@ -3,6 +3,9 @@
 GCP_REGION="europe-west9"
 GCP_PROJECT_NUMBER="798614005646"
 GCP_NETWORK_NAME="les-sagas-mp3"
+GCP_DNS_MANAGED_ZONE_NAME="les-sagas-mp3"
+GCP_DNS_MANAGED_ZONE_DNS_NAME="les-sagas-mp3.fr"
+GCP_DNS_MANAGED_ZONE_DESCRIPTION="Les Sagas MP3"
 TF_STATES_BACKEND="les-sagas-mp3-infrastructure"
 
 PROJECT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/.."
@@ -26,7 +29,18 @@ gcloud config set project $gcpProjectId
 
 # Activate required APIs
 gcloud services enable compute.googleapis.com
+gcloud services enable dns.googleapis.com
 gcloud services enable storage.googleapis.com
+
+# Get DNS managed zone
+gcpDnsJson=$(gcloud dns managed-zones list --filter=dnsName:$GCP_DNS_MANAGED_ZONE_DNS_NAME --format=json)
+gcpDnsLength=$(echo $gcpDnsJson | jq '. | length')
+
+# Create DNS managed zone if not exists
+if [ $gcpDnsLength -eq 0 ]; then
+    echo "▶️ Create GCP DNS managed zone"
+    gcloud dns managed-zones create $GCP_DNS_MANAGED_ZONE_NAME --description="$GCP_DNS_MANAGED_ZONE_DESCRIPTION" --dns-name=$GCP_DNS_MANAGED_ZONE_DNS_NAME
+fi
 
 # Get GCP networks maching the name
 gcpNetworksJson=$(gcloud compute networks list --filter=name:$GCP_NETWORK_NAME --format=json)

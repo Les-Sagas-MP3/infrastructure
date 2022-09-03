@@ -32,3 +32,14 @@ variable "environment_name" {
   type        = string
   description = "Environment name"
 }
+
+variable "ssh_user" {
+  type        = string
+  description = "SSH username"
+  default     = "provisioning"
+}
+
+variable "ssh_public_key" {
+  type        = string
+  description = "SSH public key"
+}
