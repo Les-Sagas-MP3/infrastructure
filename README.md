@@ -19,7 +19,13 @@ gcloud auth application-default login
 Prepare GCP Project :
 
 ```bash
-./scripts/0-init-gcp.sh
+./scripts/0-init.sh
+```
+
+Specify required variables :
+
+```bash
+export TF_VAR_ssh_public_key="<content of public key>"
 ```
 
 Apply Terraform configuration :

@@ -18,12 +18,25 @@ resource "google_compute_instance" "main" {
 
   network_interface {
     network            = var.gcp_network_name
-    subnetwork         = var.environment_name
+    subnetwork         = google_compute_subnetwork.environment.name
     subnetwork_project = var.gcp_project
+    access_config {
+      nat_ip = google_compute_address.main.address
+    }
   }
 
   service_account {
     email  = google_service_account.terraform.email
     scopes = ["cloud-platform"]
   }
+
+  metadata = {
+    ssh-keys = "${var.ssh_user}:${var.ssh_public_key}"
+  }
+
+  tags = [
+    "icmp",
+    "ssh",
+    "https"
+  ]
 }
