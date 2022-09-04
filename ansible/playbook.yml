@@ -1,0 +1,46 @@
+- hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: "Update Repository cache"
+    apt:
+      update_cache: true
+      cache_valid_time: 3600
+      force_apt_get: true
+
+- hosts: all
+  name: Install PostgreSQL
+  roles:
+    - name: geerlingguy.postgresql
+      become: yes
+      vars:
+        postgresql_version: "14"
+        postgresql_databases:
+          - name: "{{ db.name }}"
+        postgresql_users:
+          - name: "{{ db.username }}"
+            password: "{{ db.password }}"
+
+- hosts: all
+  name: Install Java
+  roles:
+    - name: geerlingguy.java
+      become: yes
+      vars:
+        java_packages:
+          - openjdk-18-jre
+
+- hosts: all
+  name: Create technical user
+  become: yes
+  tasks:
+  - user:
+      name: lessagasmp3
+
+- hosts: all
+  name: Install Les Sagas MP3 components
+  vars:
+    linux_user: lessagasmp3
+  roles:
+    - role: core
+      become: yes

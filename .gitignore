@@ -2,3 +2,5 @@ terraform/.plan/*.tfplan
 terraform/.plan/*.json
 terraform/.terraform
 terraform/*.tfstate*
+
+ansible/inventory-*
