@@ -35,6 +35,18 @@ Apply Terraform configuration :
 ./scripts/2-tf-apply.sh
 ```
 
+Specify required variables :
+
+```bash
+export ANS_PRIVATE_KEY_PATH="<path to private key matching TF_VAR_ssh_public_key>"
+```
+
+Run Ansible playbook :
+
+```bash
+./scripts/3-ans.sh
+```
+
 ## Destroy
 
 When not needed anymore, destroy all GCP resources :

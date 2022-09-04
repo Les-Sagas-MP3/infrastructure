@@ -1,0 +1,6 @@
+roles:
+  - src: geerlingguy.postgresql
+    version: 3.4.0
+  - src: geerlingguy.java
+    version: 2.2.0
+

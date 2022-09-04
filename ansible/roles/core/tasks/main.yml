@@ -1,0 +1,51 @@
+
+- name: Create install directory
+  file:
+    path: "{{ install_dir }}"
+    state: directory
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+
+- name: Create systemd script
+  template:
+    src: les-sagas-mp3.service.j2
+    dest: "{{ install_dir }}/les-sagas-mp3.service"
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+    mode: '0644'
+
+- name: Create symbolic link to systemd script
+  file:
+    src: "{{ install_dir }}/les-sagas-mp3.service"
+    dest: "/etc/systemd/system/les-sagas-mp3.service"
+    state: link
+
+- name: Create version directory
+  become: yes
+  file:
+    path: "{{ install_dir }}/{{ version }}"
+    state: directory
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+
+- name: Download jar
+  get_url:
+    url: https://github.com/Les-Sagas-MP3/core/releases/download/{{ version }}/core-exec.jar
+    dest: "{{ install_dir }}/{{ version }}/core-exec.jar"
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+    mode: "0755"
+
+- name: Create symbolic link to current version
+  file:
+    src: "{{ install_dir }}/{{ version }}/core-exec.jar"
+    dest: "{{ install_dir }}/core-exec.jar"
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+    state: link
+
+- name: Run daemon-reload to pick up config changes
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: les-sagas-mp3
