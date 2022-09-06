@@ -17,6 +17,23 @@ resource "google_compute_address" "main" {
   name    = var.environment_name
 }
 
+resource "google_compute_firewall" "http" {
+  project   = var.gcp_project
+  name      = "http"
+  network   = data.google_compute_network.main.self_link
+  direction = "INGRESS"
+  priority  = 1000
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+
+  target_tags = ["http"]
+}
+
 resource "google_compute_firewall" "https" {
   project   = var.gcp_project
   name      = "https"

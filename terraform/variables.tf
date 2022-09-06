@@ -43,3 +43,13 @@ variable "ssh_public_key" {
   type        = string
   description = "SSH public key"
 }
+
+variable "app_url" {
+  type        = string
+  description = "App URL"
+}
+
+variable "api_url" {
+  type        = string
+  description = "API URL"
+}
