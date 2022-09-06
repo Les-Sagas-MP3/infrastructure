@@ -3,6 +3,8 @@ data "template_file" "inventory" {
   vars = {
     ip_address       = google_compute_address.main.address
     environment_name = var.environment_name
+    app_url          = var.app_url
+    api_url          = var.api_url
   }
 }
 

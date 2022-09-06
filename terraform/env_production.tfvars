@@ -8,3 +8,6 @@ gcp_instance_zone = "europe-west9-a"
 gcp_instance_type = "e2-micro"
 
 environment_name = "production"
+
+app_url = "https://app.les-sagas-mp3.fr"
+api_url = "https://api.les-sagas-mp3.fr/api"

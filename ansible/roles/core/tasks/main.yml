@@ -1,5 +1,6 @@
 
 - name: Create install directory
+  become: yes
   file:
     path: "{{ install_dir }}"
     state: directory

@@ -37,6 +37,7 @@ resource "google_compute_instance" "main" {
   tags = [
     "icmp",
     "ssh",
+    "http",
     "https"
   ]
 }

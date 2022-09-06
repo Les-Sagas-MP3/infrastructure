@@ -34,8 +34,8 @@
   name: Create technical user
   become: yes
   tasks:
-  - user:
-      name: lessagasmp3
+    - user:
+        name: lessagasmp3
 
 - hosts: all
   name: Install Les Sagas MP3 components
@@ -44,3 +44,83 @@
   roles:
     - role: core
       become: yes
+    - role: app
+      become: yes
+
+- hosts: all
+  name: Install Nginx
+  become: yes
+  roles:
+    - role: nginxinc.nginx
+      vars:
+        nginx_version: "=1.21.6-1~jammy"
+        nginx_service_modify: true
+        nginx_service_timeout: 95
+        nginx_logrotate_conf_enable: true
+        nginx_logrotate_conf:
+          paths:
+            - /var/log/nginx/*.log
+          options:
+            - daily
+            - missingok
+            - rotate 14
+            - compress
+            - delaycompress
+            - notifempty
+            - sharedscripts
+  tasks:
+    - name: Create nginx conf for api component
+      template:
+        src: api.nginx.conf.j2
+        dest: "/etc/nginx/conf.d/api.conf"
+        mode: '0644'
+    - name: Create nginx conf for app component
+      template:
+        src: app.nginx.conf.j2
+        dest: "/etc/nginx/conf.d/app.conf"
+        mode: '0644'
+    - name: Reload nginx
+      systemd:
+        state: restarted
+        name: nginx
+
+- hosts: all
+  name: Configure SSL
+  become: yes
+  tasks:
+    - name: Checking python
+      package:
+        name: python3-pip
+        state: present
+    - name: Checking cron
+      package:
+        name: cron
+        state: present
+    - name: Install certbot
+      pip:
+        name:
+          - certbot
+          - certbot-nginx
+        executable: pip3
+    - name: Register certbot
+      shell: |
+        certbot -n register --agree-tos --email lessagasmp3@gmail.com
+        touch /etc/letsencrypt/.registered
+      args:
+        creates: /etc/letsencrypt/.registered
+    - name: Setup cronjob for renewal
+      cron:
+        name: certbot-renewal
+        job: "/bin/bash -lc '/usr/local/bin/certbot -q renew'"
+        minute: "0"
+        hour: "14"
+    - name: Get api certificate
+      command: '/usr/local/bin/certbot -n --nginx -d api.les-sagas-mp3.fr'
+      ignore_errors: true
+    - name: Get app certificate
+      command: '/usr/local/bin/certbot -n --nginx -d app.les-sagas-mp3.fr'
+      ignore_errors: true
+    - name: Reload nginx
+      systemd:
+        state: restarted
+        name: nginx
