@@ -2,11 +2,16 @@ all:
   hosts:
     ${environment_name}:
       ansible_host: ${ip_address}
+      domain: ${domain}
       db:
         name: lessagasmp3
         username: lessagasmp3
         password: lessagasmp3
+      storage:
+        bucket_name: ${bucket_name}
       api:
-        url: ${api_url}
+        subdomain: ${api_subdomain}
+        version: ${api_version}
       app:
-        url: ${app_url}
+        subdomain: ${app_subdomain}
+        version: ${app_version}

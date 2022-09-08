@@ -11,7 +11,7 @@ resource "google_compute_subnetwork" "environment" {
   network       = data.google_compute_network.main.id
 }
 
-resource "google_compute_address" "main" {
+resource "google_compute_address" "environment" {
   project = var.gcp_project
   region  = var.gcp_region
   name    = var.environment_name

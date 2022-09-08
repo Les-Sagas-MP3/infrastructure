@@ -31,7 +31,7 @@ export TF_VAR_ssh_public_key="<content of public key>"
 Apply Terraform configuration :
 
 ```bash
-./scripts/1-tf-plan.sh
+./scripts/1-tf-plan.sh <env>
 ./scripts/2-tf-apply.sh
 ```
 
@@ -44,7 +44,7 @@ export ANS_PRIVATE_KEY_PATH="<path to private key matching TF_VAR_ssh_public_key
 Run Ansible playbook :
 
 ```bash
-./scripts/3-ans.sh
+./scripts/3-ans.sh <env>
 ```
 
 ## Destroy
@@ -52,5 +52,5 @@ Run Ansible playbook :
 When not needed anymore, destroy all GCP resources :
 
 ```bash
-./scripts/9-tf-destroy.sh
+./scripts/9-tf-destroy.sh <env>
 ```

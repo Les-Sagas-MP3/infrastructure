@@ -1,10 +1,4 @@
-resource "google_service_account" "terraform" {
-  project      = var.gcp_project
-  account_id   = "terraform"
-  display_name = "Terraform"
-}
-
-resource "google_compute_instance" "main" {
+resource "google_compute_instance" "environment" {
   project      = var.gcp_project
   zone         = var.gcp_instance_zone
   name         = var.environment_name
@@ -21,12 +15,12 @@ resource "google_compute_instance" "main" {
     subnetwork         = google_compute_subnetwork.environment.name
     subnetwork_project = var.gcp_project
     access_config {
-      nat_ip = google_compute_address.main.address
+      nat_ip = google_compute_address.environment.address
     }
   }
 
   service_account {
-    email  = google_service_account.terraform.email
+    email  = google_service_account.environment.email
     scopes = ["cloud-platform"]
   }
 

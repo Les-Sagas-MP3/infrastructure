@@ -9,6 +9,43 @@
       force_apt_get: true
 
 - hosts: all
+  name: Create technical user
+  become: yes
+  tasks:
+    - user:
+        name: lessagasmp3
+        uid: 1003
+
+- hosts: all
+  name: Mount bucket on data folder
+  become: yes
+  tasks:
+    - name: Add Google Cloud apt repository key.
+      get_url:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        dest: /etc/apt/trusted.gpg.d/gcloud.gpg
+        mode: '0644'
+        force: true
+    - name: Add Google Cloud apt repository
+      apt_repository: 
+        repo: 'deb http://packages.cloud.google.com/apt gcsfuse-focal main'
+        state: present 
+        filename: gcsfuse 
+        update_cache: yes
+    - name: Install gcsfuse
+      package:
+        name: gcsfuse
+        state: present
+    - name: Create install directory
+      file:
+        path: "/opt/les-sagas-mp3/data"
+        state: directory
+        owner: "lessagasmp3"
+        group: "lessagasmp3"
+    - name: Mount bucket on VM
+      shell: "gcsfuse --app-name les-sagas-mp3 --uid 1003 --gid 1003 {{ storage.bucket_name }} /opt/les-sagas-mp3/data"
+
+- hosts: all
   name: Install PostgreSQL
   roles:
     - name: geerlingguy.postgresql
@@ -31,21 +68,18 @@
           - openjdk-18-jre
 
 - hosts: all
-  name: Create technical user
-  become: yes
-  tasks:
-    - user:
-        name: lessagasmp3
-
-- hosts: all
   name: Install Les Sagas MP3 components
   vars:
     linux_user: lessagasmp3
   roles:
     - role: core
       become: yes
+      vars:
+        version: "{{ api.version }}"
     - role: app
       become: yes
+      vars:
+        version: "{{ app.version }}"
 
 - hosts: all
   name: Install Nginx
@@ -115,10 +149,10 @@
         minute: "0"
         hour: "14"
     - name: Get api certificate
-      command: '/usr/local/bin/certbot -n --nginx -d api.les-sagas-mp3.fr'
+      command: "/usr/local/bin/certbot -n --nginx -d {{ api.subdomain }}.{{ domain }}"
       ignore_errors: true
     - name: Get app certificate
-      command: '/usr/local/bin/certbot -n --nginx -d app.les-sagas-mp3.fr'
+      command: "/usr/local/bin/certbot -n --nginx -d {{ app.subdomain }}.{{ domain }}"
       ignore_errors: true
     - name: Reload nginx
       systemd:

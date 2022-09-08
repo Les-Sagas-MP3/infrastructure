@@ -6,7 +6,6 @@ GCP_NETWORK_NAME="les-sagas-mp3"
 GCP_DNS_MANAGED_ZONE_NAME="les-sagas-mp3"
 GCP_DNS_MANAGED_ZONE_DNS_NAME="les-sagas-mp3.fr"
 GCP_DNS_MANAGED_ZONE_DESCRIPTION="Les Sagas MP3"
-TF_STATES_BACKEND="les-sagas-mp3-infrastructure"
 
 PROJECT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/.."
 
@@ -28,6 +27,7 @@ echo "▶️ Set GCP project to : $gcpProjectId ($GCP_PROJECT_NUMBER)"
 gcloud config set project $gcpProjectId
 
 # Activate required APIs
+gcloud services enable cloudbuild.googleapis.com
 gcloud services enable compute.googleapis.com
 gcloud services enable dns.googleapis.com
 gcloud services enable storage.googleapis.com
@@ -52,16 +52,14 @@ if [ $gcpNetworksLength -eq 0 ]; then
     gcloud compute networks create $GCP_NETWORK_NAME --subnet-mode=custom
 fi
 
-# Get GCP Buckets maching the Terraform states backend
-gcpBucketsJson=$(gcloud alpha storage buckets list --filter=id:$TF_STATES_BACKEND --format=json)
-gcpBucketsLength=$(echo $gcpBucketsJson | jq '. | length')
-
-# Create Terraform bucket if not exists
-if [ $gcpBucketsLength -eq 0 ]; then
-    echo "▶️ Create GCP Bucket to store Terraform states"
-    gcloud alpha storage buckets create gs://$TF_STATES_BACKEND --location=$GCP_REGION
+# Get email of authenticated user
+gcpAuthAccountJson=$(gcloud auth list --filter=status:ACTIVE --format=json)
+gcpAuthAccountLength=$(echo $gcpNetworksJson | jq '. | length')
+if [ $gcpAuthAccountLength -ne 1 ]; then
+    echo "❌ No active account detected."
+    exit 1
 fi
 
-# Init Terraform
-cd $PROJECT_PATH/terraform
-terraform init -backend-config="bucket=$TF_STATES_BACKEND"
+# Grant Cloud Storage Admin role to authenticated user
+gcpAuthEmail=$(echo $gcpAuthAccountJson | jq -r '.[0].account')
+gcloud projects add-iam-policy-binding $gcpProjectId --member=user:$gcpAuthEmail --role=roles/storage.admin
