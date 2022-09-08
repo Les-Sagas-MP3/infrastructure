@@ -9,12 +9,12 @@ resource "google_dns_record_set" "dns" {
   type         = "A"
   ttl          = 300
   managed_zone = data.google_dns_managed_zone.lessagasmp3.name
-  rrdatas      = [google_compute_instance.main.network_interface[0].access_config[0].nat_ip]
+  rrdatas      = [google_compute_instance.environment.network_interface[0].access_config[0].nat_ip]
 }
 
 resource "google_dns_record_set" "api" {
   project      = var.gcp_project
-  name         = "api.${data.google_dns_managed_zone.lessagasmp3.dns_name}"
+  name         = "${var.api_subdomain}.${data.google_dns_managed_zone.lessagasmp3.dns_name}"
   type         = "CNAME"
   ttl          = 300
   managed_zone = data.google_dns_managed_zone.lessagasmp3.name
@@ -23,7 +23,7 @@ resource "google_dns_record_set" "api" {
 
 resource "google_dns_record_set" "app" {
   project      = var.gcp_project
-  name         = "app.${data.google_dns_managed_zone.lessagasmp3.dns_name}"
+  name         = "${var.app_subdomain}.${data.google_dns_managed_zone.lessagasmp3.dns_name}"
   type         = "CNAME"
   ttl          = 300
   managed_zone = data.google_dns_managed_zone.lessagasmp3.name
