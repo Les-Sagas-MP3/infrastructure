@@ -14,8 +14,8 @@ steps:
   args: 
   - '-c'
   - |
-    cd $TERRAFORM_WORKSPACE
     terraform init -backend-config="bucket=$_TF_STATES_BACKEND" -backend-config="prefix=production"
+  dir: 'terraform'
 
 - id: 'terraform plan'
   name: 'hashicorp/terraform:1.2.9'
@@ -23,13 +23,13 @@ steps:
   args: 
   - '-c'
   - |
-    cd $TERRAFORM_WORKSPACE
-    terraform plan -var-file=$TERRAFORM_WORKSPACE/environments/production.tfvars -out $TERRAFORM_WORKSPACE/.plan/apply.tfplan
-    terraform show -no-color -json $TERRAFORM_WORKSPACE/.plan/apply.tfplan > $TERRAFORM_WORKSPACE/.plan/apply.json
+    terraform plan -var-file=$_TF_WORKSPACE/environments/production.tfvars -out $_TF_WORKSPACE/.plan/apply.tfplan
+    terraform show -no-color -json $_TF_WORKSPACE/.plan/apply.tfplan > $_TF_WORKSPACE/.plan/apply.json
   env:
   - 'TF_VAR_ssh_public_key=$_TF_VAR_SSH_PUBLIC_KEY'
+  dir: 'terraform'
 
 options:
   logging: CLOUD_LOGGING_ONLY
   env:
-  - 'TERRAFORM_WORKSPACE=/workspace/terraform'
+  - '_TF_WORKSPACE=/workspace/terraform'
