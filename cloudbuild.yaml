@@ -1,5 +1,13 @@
 steps:
 
+- id: 'debug'
+  name: 'alpine'
+  entrypoint: 'sh'  
+  args: 
+  - '-c'
+  - | 
+      ls -all /workspace
+
 - id: 'terraform init'
   name: 'hashicorp/terraform:1.2.9'
   entrypoint: 'sh'
@@ -16,7 +24,7 @@ steps:
   - '-c'
   - |
     cd terraform
-    terraform plan -var-file=terraform/environments/production.tfvars -out .plan/apply.tfplan
+    terraform plan -var-file=/workspace/terraform/environments/production.tfvars -out .plan/apply.tfplan
     terraform show -no-color -json .plan/apply.tfplan > .plan/apply.json
   env:
   - 'TF_VAR_ssh_public_key=$_TF_VAR_SSH_PUBLIC_KEY'
