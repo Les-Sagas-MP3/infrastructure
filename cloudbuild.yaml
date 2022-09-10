@@ -32,4 +32,4 @@ steps:
 options:
   logging: CLOUD_LOGGING_ONLY
   substitutions:
-  - '_TF_WORKSPACE=/workspace/terraform'
+    _TF_WORKSPACE: /workspace/terraform
