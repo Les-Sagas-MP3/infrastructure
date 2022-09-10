@@ -6,6 +6,8 @@ GCP_NETWORK_NAME="les-sagas-mp3"
 GCP_DNS_MANAGED_ZONE_NAME="les-sagas-mp3"
 GCP_DNS_MANAGED_ZONE_DNS_NAME="les-sagas-mp3.fr"
 GCP_DNS_MANAGED_ZONE_DESCRIPTION="Les Sagas MP3"
+GCP_CI_SA_NAME="infrastructure"
+GCP_CI_SA_DESCRIPTION="Infrastructure Deployment"
 
 PROJECT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/.."
 
@@ -63,3 +65,14 @@ fi
 # Grant Cloud Storage Admin role to authenticated user
 gcpAuthEmail=$(echo $gcpAuthAccountJson | jq -r '.[0].account')
 gcloud projects add-iam-policy-binding $gcpProjectId --member=user:$gcpAuthEmail --role=roles/storage.admin
+
+# Get CI service accounts
+gcpServiceAccountsJson=$(gcloud iam service-accounts list --filter=name:$GCP_CI_SA_NAME --format=json)
+gcpServiceAccountsLength=$(echo $gcpServiceAccountsJson | jq '. | length')
+if [ $gcpServiceAccountsLength -eq 0 ]; then
+    echo "▶️ Create CI service account"
+    gcloud iam service-accounts create $GCP_CI_SA_NAME --display-name "$GCP_CI_SA_DESCRIPTION"
+    gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/editor'
+    gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/cloudbuild.builds.builder'
+fi
+
