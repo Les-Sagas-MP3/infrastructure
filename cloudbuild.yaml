@@ -1,9 +1,19 @@
 steps:
-- id: 'tf plan'
+
+- id: 'terraform init'
   name: 'hashicorp/terraform:1.2.9'
   entrypoint: 'sh'
   args: 
   - '-c'
-  - 'echo hello'
+  - 'terraform init -backend-config="bucket=$_TF_STATES_BACKEND" -backend-config="prefix=production"'
+
+- id: 'terraform plan'
+  name: 'hashicorp/terraform:1.2.9'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - 'terraform plan -var-file=environments/production.tfvars -out .plan/apply.tfplan'
+  - '&&'
+  - 'terraform show -no-color -json .plan/apply.tfplan > .plan/apply.json'
   env:
-  - 'TF_VAR_ssh_public_key=$_SSH_PUBLIC_KEY'
+  - 'TF_VAR_ssh_public_key=$_TF_VAR_SSH_PUBLIC_KEY'
