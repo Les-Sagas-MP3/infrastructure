@@ -16,8 +16,6 @@ steps:
   - |
     cd terraform
     terraform init -backend-config="bucket=$_TF_STATES_BACKEND" -backend-config="prefix=production"
-  options:
-    logging: CLOUD_LOGGING_ONLY
 
 - id: 'terraform plan'
   name: 'hashicorp/terraform:1.2.9'
