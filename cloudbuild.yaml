@@ -31,5 +31,5 @@ steps:
 
 options:
   logging: CLOUD_LOGGING_ONLY
-  env:
+  substitutions:
   - '_TF_WORKSPACE=/workspace/terraform'
