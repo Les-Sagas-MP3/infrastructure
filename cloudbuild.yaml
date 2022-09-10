@@ -1,0 +1,10 @@
+steps:
+
+# [START tf-plan]
+- id: 'tf plan'
+  name: 'hashicorp/terraform:1.2.9'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - ./scripts/1-tf-plan.sh production
+# [END tf-plan]

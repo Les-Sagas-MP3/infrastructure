@@ -21,5 +21,5 @@ terraform init -backend-config="bucket=$TF_STATES_BACKEND" -backend-config="pref
 
 # Run plan
 cd $PROJECT_PATH/terraform
-terraform plan -var-file=env_$1.tfvars -out .plan/apply.tfplan
+terraform plan -var-file=environments/$1.tfvars -out .plan/apply.tfplan
 terraform show -no-color -json .plan/apply.tfplan > .plan/apply.json
