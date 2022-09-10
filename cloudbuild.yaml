@@ -5,16 +5,18 @@ steps:
   entrypoint: 'sh'
   args: 
   - '-c'
-  - 'cd terraform &&'
-  - 'terraform init -backend-config="bucket=$_TF_STATES_BACKEND" -backend-config="prefix=production"'
+  - |
+    cd terraform
+    terraform init -backend-config="bucket=$_TF_STATES_BACKEND" -backend-config="prefix=production"
 
 - id: 'terraform plan'
   name: 'hashicorp/terraform:1.2.9'
   entrypoint: 'sh'
   args: 
   - '-c'
-  - 'cd terraform &&'
-  - 'terraform plan -var-file=terraform/environments/production.tfvars -out .plan/apply.tfplan &&'
-  - 'terraform show -no-color -json .plan/apply.tfplan > .plan/apply.json'
+  - |
+    cd terraform
+    terraform plan -var-file=terraform/environments/production.tfvars -out .plan/apply.tfplan
+    terraform show -no-color -json .plan/apply.tfplan > .plan/apply.json
   env:
   - 'TF_VAR_ssh_public_key=$_TF_VAR_SSH_PUBLIC_KEY'
