@@ -1,13 +1,9 @@
 steps:
-
-# [START tf-plan]
 - id: 'tf plan'
   name: 'hashicorp/terraform:1.2.9'
   entrypoint: 'sh'
   args: 
   - '-c'
-  - scripts/1-tf-plan.sh production
+  - 'echo hello'
   env:
   - 'TF_VAR_ssh_public_key=$_SSH_PUBLIC_KEY'
-
-# [END tf-plan]
