@@ -6,5 +6,8 @@ steps:
   entrypoint: 'sh'
   args: 
   - '-c'
-  - ./scripts/1-tf-plan.sh production
+  - scripts/1-tf-plan.sh production
+  env:
+  - 'TF_VAR_ssh_public_key=$_SSH_PUBLIC_KEY'
+
 # [END tf-plan]
