@@ -29,7 +29,9 @@ steps:
   - 'TF_VAR_ssh_public_key=$_TF_VAR_SSH_PUBLIC_KEY'
   dir: 'terraform'
 
+substitutions:
+  _TF_WORKSPACE: /workspace/terraform
+
 options:
   logging: CLOUD_LOGGING_ONLY
-  substitutions:
-    _TF_WORKSPACE: /workspace/terraform
+  substitution_option: 'ALLOW_LOOSE'
