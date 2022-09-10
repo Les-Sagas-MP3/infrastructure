@@ -32,6 +32,7 @@ gcloud config set project $gcpProjectId
 gcloud services enable cloudbuild.googleapis.com
 gcloud services enable compute.googleapis.com
 gcloud services enable dns.googleapis.com
+gcloud services enable iam.googleapis.com
 gcloud services enable storage.googleapis.com
 
 # Get DNS managed zone
