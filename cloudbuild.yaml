@@ -37,7 +37,9 @@ steps:
   args: 
   - '-c'
   - |
+    mkdir -p $_SSH_FOLDER
     echo "$_SSH_PRIVATE_KEY" > $_SSH_PRIVATE_KEY_PATH
+    chmod og-rw ~/.netrc
     ansible-galaxy install -r requirements.yml
     ansible-playbook -i inventory-$_ENVIRONMENT.yml --user=$_SSH_USER --private-key=$_SSH_PRIVATE_KEY_PATH playbook.yml
   dir: 'ansible'
@@ -45,6 +47,7 @@ steps:
 substitutions:
   _ENVIRONMENT: production
   _SSH_USER: provisioning
+  _SSH_FOLDER: /workspace/.ssh
   _SSH_PRIVATE_KEY_PATH: /workspace/.ssh/private_key
   _TF_WORKSPACE: /workspace/terraform
 
