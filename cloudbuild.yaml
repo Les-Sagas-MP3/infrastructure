@@ -57,7 +57,9 @@ steps:
     ansible-galaxy install -r requirements.yml
     cat inventory-$_ENVIRONMENT.yml
     cat $_SSH_KEY_PATH
-    ls -all
+    ls -all ~/.ssh
+    cat ~/.ssh/known_hosts
+    rm ~/.ssh/known_hosts
     ansible-playbook -i inventory-$_ENVIRONMENT.yml --user=$_SSH_USER --private-key=$_SSH_KEY_PATH playbook.yml
   dir: 'ansible'
 
