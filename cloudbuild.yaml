@@ -24,8 +24,6 @@ steps:
   - |
     export TF_VAR_ssh_private_key=$(cat $_SSH_KEY_PATH)
     export TF_VAR_ssh_public_key=$(cat $_SSH_KEY_PATH.pub)
-    echo ${TF_VAR_ssh_private_key}
-    echo ${TF_VAR_ssh_public_key}
     terraform plan -var-file=$_TF_WORKSPACE/environments/$_ENVIRONMENT.tfvars -out $_TF_WORKSPACE/.plan/apply.tfplan
     terraform show -no-color -json $_TF_WORKSPACE/.plan/apply.tfplan > $_TF_WORKSPACE/.plan/apply.json
   env:
@@ -46,7 +44,9 @@ steps:
   entrypoint: 'bash'
   args: 
   - '-c'
-  - gcloud secrets versions access latest --secret=ssh_key_${_ENVIRONMENT}_${_SSH_USER} --format='get(payload.data)' | tr '_-' '/+' | base64 -d > $_SSH_KEY_PATH
+  - |
+    gcloud secrets versions access latest --secret=ssh_key_${_ENVIRONMENT}_${_SSH_USER} > $_SSH_KEY_PATH
+    echo -e "" >> $_SSH_KEY_PATH
 
 - id: 'install'
   name: 'cnieg/ansible:1.0.49-ansible-5.8.0-r0'
