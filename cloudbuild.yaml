@@ -57,16 +57,13 @@ steps:
     ansible-galaxy install -r requirements.yml
     cat inventory-$_ENVIRONMENT.yml
     cat $_SSH_KEY_PATH
-    ls -all ~/.ssh
-    cat ~/.ssh/known_hosts
-    rm ~/.ssh/known_hosts
     ansible-playbook -i inventory-$_ENVIRONMENT.yml --user=$_SSH_USER --private-key=$_SSH_KEY_PATH playbook.yml
   dir: 'ansible'
 
 substitutions:
-  _ENVIRONMENT: production
   _SSH_USER: provisioning
   _SSH_KEY_PATH: /workspace/ssh_key
+  _TF_STATES_BACKEND: les-sagas-mp3-infrastructure
   _TF_WORKSPACE: /workspace/terraform
 
 options:
