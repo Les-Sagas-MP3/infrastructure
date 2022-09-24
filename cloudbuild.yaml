@@ -1,6 +1,6 @@
 steps:
 
-- id: 'terraform init'
+- id: 'init'
   name: 'hashicorp/terraform:1.2.9'
   entrypoint: 'sh'
   args: 
@@ -39,6 +39,7 @@ steps:
   - |
     mkdir -p $_SSH_FOLDER
     echo "$_SSH_PRIVATE_KEY" > $_SSH_PRIVATE_KEY_PATH
+    chmod 600 $_SSH_PRIVATE_KEY_PATH
     chmod og-rw ~/.netrc
     ansible-galaxy install -r requirements.yml
     ansible-playbook -i inventory-$_ENVIRONMENT.yml --user=$_SSH_USER --private-key=$_SSH_PRIVATE_KEY_PATH playbook.yml
