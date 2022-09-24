@@ -33,13 +33,13 @@ steps:
 
 - id: 'install'
   name: 'cnieg/ansible:1.0.49-ansible-5.8.0-r0'
-  entrypoint: 'sh'
+  entrypoint: 'ash'
   args: 
   - '-c'
   - |
     echo "$_SSH_PRIVATE_KEY" > $_SSH_PRIVATE_KEY_PATH
     ansible-galaxy install -r requirements.yml
-    ansible-playbook -i inventory-$1.yml --user=$_SSH_USER --private-key=$_SSH_PRIVATE_KEY_PATH playbook.yml
+    ansible-playbook -i inventory-$_ENVIRONMENT.yml --user=$_SSH_USER --private-key=$_SSH_PRIVATE_KEY_PATH playbook.yml
   dir: 'ansible'
 
 substitutions:
