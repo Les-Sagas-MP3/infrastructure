@@ -1,35 +1,51 @@
 steps:
 
-- id: 'debug'
-  name: 'alpine'
-  entrypoint: 'sh'  
-  args: 
-  - '-c'
-  - | 
-      ls -all /workspace
-
 - id: 'terraform init'
   name: 'hashicorp/terraform:1.2.9'
   entrypoint: 'sh'
   args: 
   - '-c'
   - |
-    terraform init -backend-config="bucket=$_TF_STATES_BACKEND" -backend-config="prefix=production"
+    terraform init -backend-config="bucket=$_TF_STATES_BACKEND" -backend-config="prefix=$_ENVIRONMENT"
   dir: 'terraform'
 
-- id: 'terraform plan'
+- id: 'plan'
   name: 'hashicorp/terraform:1.2.9'
   entrypoint: 'sh'
   args: 
   - '-c'
   - |
-    terraform plan -var-file=$_TF_WORKSPACE/environments/production.tfvars -out $_TF_WORKSPACE/.plan/apply.tfplan
+    terraform plan -var-file=$_TF_WORKSPACE/environments/$_ENVIRONMENT.tfvars -out $_TF_WORKSPACE/.plan/apply.tfplan
     terraform show -no-color -json $_TF_WORKSPACE/.plan/apply.tfplan > $_TF_WORKSPACE/.plan/apply.json
   env:
-  - 'TF_VAR_ssh_public_key=$_TF_VAR_SSH_PUBLIC_KEY'
+  - 'TF_VAR_ssh_user=$_SSH_USER'
+  - 'TF_VAR_ssh_public_key=$_SSH_PUBLIC_KEY'
   dir: 'terraform'
 
+- id: 'apply'
+  name: 'hashicorp/terraform:1.2.9'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - |
+    terraform apply -auto-approve $_TF_WORKSPACE/.plan/apply.tfplan
+  dir: 'terraform'
+
+- id: 'install'
+  name: 'cnieg/ansible:1.0.49-ansible-5.8.0-r0'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - |
+    echo "$_SSH_PRIVATE_KEY" > $_SSH_PRIVATE_KEY_PATH
+    ansible-galaxy install -r requirements.yml
+    ansible-playbook -i inventory-$1.yml --user=$_SSH_USER --private-key=$_SSH_PRIVATE_KEY_PATH playbook.yml
+  dir: 'ansible'
+
 substitutions:
+  _ENVIRONMENT: production
+  _SSH_USER: provisioning
+  _SSH_PRIVATE_KEY_PATH: /workspace/.ssh/private_key
   _TF_WORKSPACE: /workspace/terraform
 
 options:

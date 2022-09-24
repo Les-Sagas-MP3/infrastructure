@@ -75,5 +75,6 @@ if [ $gcpServiceAccountsLength -eq 0 ]; then
     gcloud iam service-accounts create $GCP_CI_SA_NAME --display-name "$GCP_CI_SA_DESCRIPTION"
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/editor'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/cloudbuild.builds.builder'
+    gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/storage.admin'
 fi
 
