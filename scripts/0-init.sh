@@ -33,6 +33,7 @@ gcloud services enable cloudbuild.googleapis.com
 gcloud services enable compute.googleapis.com
 gcloud services enable dns.googleapis.com
 gcloud services enable iam.googleapis.com
+gcloud services enable secretmanager.googleapis.com
 gcloud services enable storage.googleapis.com
 
 # Get DNS managed zone
@@ -76,5 +77,5 @@ if [ $gcpServiceAccountsLength -eq 0 ]; then
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/editor'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/cloudbuild.builds.builder'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/storage.admin'
+    gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/secretmanager.secretAccessor'
 fi
-

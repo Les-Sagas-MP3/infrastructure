@@ -49,6 +49,12 @@ variable "ssh_public_key" {
   description = "SSH public key"
 }
 
+variable "ssh_private_key" {
+  type        = string
+  description = "SSH private key"
+  sensitive   = true
+}
+
 variable "domain" {
   type        = string
   description = "App subdomain"
