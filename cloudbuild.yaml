@@ -1,6 +1,6 @@
 steps:
 
-- id: 'init'
+- id: 'generate-ssh-key'
   name: 'lgatica/openssh-client:latest'
   entrypoint: 'sh'
   args: 
