@@ -22,8 +22,8 @@ steps:
   args: 
   - '-c'
   - |
-    export TF_VAR_SSH_private_key=$(cat $_SSH_KEY_PATH)
-    export TF_VAR_SSH_public_key=$(cat $_SSH_KEY_PATH.pub)
+    export TF_VAR_ssh_private_key=$(cat $_SSH_KEY_PATH)
+    export TF_VAR_ssh_public_key=$(cat $_SSH_KEY_PATH.pub)
     terraform plan -var-file=$_TF_WORKSPACE/environments/$_ENVIRONMENT.tfvars -out $_TF_WORKSPACE/.plan/apply.tfplan
     terraform show -no-color -json $_TF_WORKSPACE/.plan/apply.tfplan > $_TF_WORKSPACE/.plan/apply.json
   env:
