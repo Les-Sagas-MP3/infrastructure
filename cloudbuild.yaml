@@ -1,6 +1,13 @@
 steps:
 
 - id: 'init'
+  name: 'lgatica/openssh-client:latest'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - ssh-keygen -t ed25519 -C "$_SSH_USER" -f $_SSH_KEY_PATH -P ""
+
+- id: 'init'
   name: 'hashicorp/terraform:1.2.9'
   entrypoint: 'sh'
   args: 
@@ -15,11 +22,12 @@ steps:
   args: 
   - '-c'
   - |
+    export TF_VAR_SSH_private_key=$(cat $_SSH_KEY_PATH)
+    export TF_VAR_SSH_public_key=$(cat $_SSH_KEY_PATH.pub)
     terraform plan -var-file=$_TF_WORKSPACE/environments/$_ENVIRONMENT.tfvars -out $_TF_WORKSPACE/.plan/apply.tfplan
     terraform show -no-color -json $_TF_WORKSPACE/.plan/apply.tfplan > $_TF_WORKSPACE/.plan/apply.json
   env:
   - 'TF_VAR_ssh_user=$_SSH_USER'
-  - 'TF_VAR_ssh_public_key=$_SSH_PUBLIC_KEY'
   dir: 'terraform'
 
 - id: 'apply'
@@ -36,7 +44,7 @@ steps:
   entrypoint: 'bash'
   args: 
   - '-c'
-  - gcloud secrets versions access latest --secret=ssh_key_$_ENVIRONMENT --format='get(payload.data)' | tr '_-' '/+' | base64 -d > $_SSH_PRIVATE_KEY_PATH
+  - gcloud secrets versions access latest --secret=ssh_key_${_ENVIRONMENT}_${_SSH_USER} --format='get(payload.data)' | tr '_-' '/+' | base64 -d > $_SSH_KEY_PATH
 
 - id: 'install'
   name: 'cnieg/ansible:1.0.49-ansible-5.8.0-r0'
@@ -44,16 +52,16 @@ steps:
   args: 
   - '-c'
   - |
-    chmod 600 $_SSH_PRIVATE_KEY_PATH
+    chmod 600 $_SSH_KEY_PATH
     chmod og-rw ~/.netrc
     ansible-galaxy install -r requirements.yml
-    ansible-playbook -i inventory-$_ENVIRONMENT.yml --user=$_SSH_USER --private-key=$_SSH_PRIVATE_KEY_PATH playbook.yml
+    ansible-playbook -i inventory-$_ENVIRONMENT.yml --user=$_SSH_USER --private-key=$_SSH_KEY_PATH playbook.yml
   dir: 'ansible'
 
 substitutions:
   _ENVIRONMENT: production
   _SSH_USER: provisioning
-  _SSH_PRIVATE_KEY_PATH: /workspace/private_key
+  _SSH_KEY_PATH: /workspace/ssh_key
   _TF_WORKSPACE: /workspace/terraform
 
 options:

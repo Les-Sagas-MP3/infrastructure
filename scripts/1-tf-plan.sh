@@ -19,6 +19,9 @@ fi
 cd $PROJECT_PATH/terraform
 terraform init -backend-config="bucket=$TF_STATES_BACKEND" -backend-config="prefix=$1" -migrate-state
 
+# Set local variables
+export TF_VAR_ssh_user=$(whoami)
+
 # Run plan
 cd $PROJECT_PATH/terraform
 terraform plan -var-file=environments/$1.tfvars -out .plan/apply.tfplan

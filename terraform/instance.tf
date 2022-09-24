@@ -24,6 +24,11 @@ resource "google_compute_instance" "environment" {
     scopes = ["cloud-platform"]
   }
 
+  labels = {
+    environment = var.environment_name
+    managedby = "terraform"
+  }
+
   metadata = {
     ssh-keys = "${var.ssh_user}:${var.ssh_public_key}"
   }
