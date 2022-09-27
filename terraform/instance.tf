@@ -26,7 +26,7 @@ resource "google_compute_instance" "environment" {
 
   labels = {
     environment = var.environment_name
-    managedby = "terraform"
+    managedby   = "terraform"
   }
 
   metadata = {

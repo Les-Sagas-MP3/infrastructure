@@ -7,8 +7,10 @@ data "template_file" "inventory" {
     bucket_name      = google_storage_bucket.environment.name
     app_subdomain    = var.app_subdomain
     app_version      = var.app_version
+    app_archive_url  = var.app_archive_url
     api_subdomain    = var.api_subdomain
     api_version      = var.api_version
+    api_archive_url  = var.api_archive_url
   }
 }
 

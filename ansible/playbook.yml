@@ -76,10 +76,12 @@
       become: yes
       vars:
         version: "{{ api.version }}"
+        archive_url: "{{ api.archive_url }}"
     - role: app
       become: yes
       vars:
         version: "{{ app.version }}"
+        archive_url: "{{ app.archive_url }}"
 
 - hosts: all
   name: Install Nginx

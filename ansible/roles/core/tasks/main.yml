@@ -36,6 +36,25 @@
     owner: "{{ linux_user }}"
     group: "{{ linux_user }}"
     mode: "0755"
+  when: archive_url == ""
+
+- name: Download archive containing jar
+  get_url:
+    url: "{{ archive_url }}"
+    dest: "/tmp/core.zip"
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+    mode: "0755"
+  when: archive_url != ""
+
+- name: Unarchive archive containing jar
+  unarchive:
+    src: /tmp/core.zip
+    remote_src: yes
+    dest: "/tmp/core"
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+  when: archive_url != ""
 
 - name: Create symbolic link to current version
   file:

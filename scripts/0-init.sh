@@ -54,6 +54,10 @@ gcpNetworksLength=$(echo $gcpNetworksJson | jq '. | length')
 if [ $gcpNetworksLength -eq 0 ]; then
     echo "▶️ Create GCP network"
     gcloud compute networks create $GCP_NETWORK_NAME --subnet-mode=custom
+    gcloud compute firewall-rules create "http" --network=$GCP_NETWORK_NAME --direction="INGRESS" --allow=tcp:80 --source-ranges="0.0.0.0/0" --target-tags="http" --priority=1000
+    gcloud compute firewall-rules create "https" --network=$GCP_NETWORK_NAME --direction="INGRESS" --allow=tcp:443 --source-ranges="0.0.0.0/0" --target-tags="https" --priority=1000
+    gcloud compute firewall-rules create "ssh" --network=$GCP_NETWORK_NAME --direction="INGRESS" --allow=tcp:22 --source-ranges="0.0.0.0/0" --target-tags="ssh" --priority=65534
+    gcloud compute firewall-rules create "icmp" --network=$GCP_NETWORK_NAME --direction="INGRESS" --action=allow --rules=icmp --source-ranges="0.0.0.0/0" --target-tags="icmp" --priority=65534
 fi
 
 # Get email of authenticated user

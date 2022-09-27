@@ -72,6 +72,12 @@ variable "app_version" {
   description = "App version"
 }
 
+variable "app_archive_url" {
+  type        = string
+  description = "App archive URL"
+  default     = ""
+}
+
 variable "api_subdomain" {
   type        = string
   description = "API subdomain"
@@ -81,4 +87,10 @@ variable "api_subdomain" {
 variable "api_version" {
   type        = string
   description = "API version"
+}
+
+variable "api_archive_url" {
+  type        = string
+  description = "API archive URL"
+  default     = ""
 }

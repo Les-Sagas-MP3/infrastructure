@@ -4,10 +4,10 @@ resource "google_storage_bucket" "environment" {
   name          = "les-sagas-mp3-${var.environment_name}"
   storage_class = "STANDARD"
   force_destroy = true
-  
+
   labels = {
     environment = var.environment_name
-    managedby = "terraform"
+    managedby   = "terraform"
   }
 }
 
@@ -27,6 +27,6 @@ data "google_iam_policy" "environment" {
 }
 
 resource "google_storage_bucket_iam_policy" "environment" {
-  bucket = google_storage_bucket.environment.name
+  bucket      = google_storage_bucket.environment.name
   policy_data = data.google_iam_policy.environment.policy_data
 }

@@ -31,7 +31,7 @@ export TF_VAR_ssh_public_key="<content of public key>"
 Apply Terraform configuration :
 
 ```bash
-./scripts/1-tf-plan.sh <env>
+./scripts/1-tf-plan.sh <env_template> <env_name>
 ./scripts/2-tf-apply.sh
 ```
 
@@ -44,7 +44,7 @@ export ANS_PRIVATE_KEY_PATH="<path to private key matching TF_VAR_ssh_public_key
 Run Ansible playbook :
 
 ```bash
-./scripts/3-ans.sh <env>
+./scripts/3-ans.sh <env_name>
 ```
 
 ## Destroy
@@ -52,5 +52,23 @@ Run Ansible playbook :
 When not needed anymore, destroy all GCP resources :
 
 ```bash
-./scripts/9-tf-destroy.sh <env>
+./scripts/9-tf-destroy.sh <env_template>
+```
+
+## Note for review environments
+
+The following environment variables must be defined :
+
+```
+
+# For an app review
+export TF_VAR_app_version="<app version>"
+export TF_VAR_app_archive_url="<URL to download archive containing dist>"
+export TF_VAR_app_subdomain="app-review-<unique id>"
+
+# For an api review
+export TF_VAR_api_version="<api version>"
+export TF_VAR_api_archive_url="<URL to download archive containing executable jar>"
+export TF_VAR_api_subdomain="api-review-<unique id>"
+
 ```
