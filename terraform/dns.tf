@@ -18,7 +18,7 @@ resource "google_dns_record_set" "api" {
   type         = "CNAME"
   ttl          = 300
   managed_zone = data.google_dns_managed_zone.lessagasmp3.name
-  rrdatas      = [data.google_dns_managed_zone.lessagasmp3.dns_name]
+  rrdatas      = ["${environment_name}.${data.google_dns_managed_zone.lessagasmp3.dns_name}"]
 }
 
 resource "google_dns_record_set" "app" {
@@ -27,5 +27,5 @@ resource "google_dns_record_set" "app" {
   type         = "CNAME"
   ttl          = 300
   managed_zone = data.google_dns_managed_zone.lessagasmp3.name
-  rrdatas      = [data.google_dns_managed_zone.lessagasmp3.dns_name]
+  rrdatas      = ["${environment_name}.${data.google_dns_managed_zone.lessagasmp3.dns_name}"]
 }
