@@ -24,7 +24,7 @@ steps:
   - |
     export TF_VAR_ssh_private_key=$(cat $_SSH_KEY_PATH)
     export TF_VAR_ssh_public_key=$(cat $_SSH_KEY_PATH.pub)
-    terraform plan -var-file=$_TF_WORKSPACE/environments/default_versions.tfvars -var-file=$_TF_WORKSPACE/environments/$_ENVIRONMENT_TEMPLATE.tfvars -var=api_version=$_API_VERSION -out $_TF_WORKSPACE/.plan/apply.tfplan
+    terraform plan -var-file=$_TF_WORKSPACE/environments/default_versions.tfvars -var-file=$_TF_WORKSPACE/environments/review-api.tfvars -var=api_version=$_API_VERSION -out $_TF_WORKSPACE/.plan/apply.tfplan
     terraform show -no-color -json $_TF_WORKSPACE/.plan/apply.tfplan > $_TF_WORKSPACE/.plan/apply.json
   env:
   - 'TF_VAR_ssh_user=$_SSH_USER'
@@ -73,7 +73,6 @@ artifacts:
     paths: ['$_TF_WORKSPACE/.plan/apply.json', 'ansible/inventory-$_ENVIRONMENT_NAME.yml']
 
 substitutions:
-  _ENVIRONMENT_TEMPLATE: review-api
   _SSH_USER: provisioning
   _SSH_KEY_PATH: /workspace/ssh_key
   _TF_STATES_BACKEND: les-sagas-mp3-infrastructure
