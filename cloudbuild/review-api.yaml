@@ -73,7 +73,7 @@ artifacts:
     paths: ['$_TF_WORKSPACE/.plan/apply.json', 'ansible/inventory-$_ENVIRONMENT_NAME.yml']
 
 substitutions:
-  _ENVIRONMENT_TEMPLATE: review
+  _ENVIRONMENT_TEMPLATE: review-api
   _SSH_USER: provisioning
   _SSH_KEY_PATH: /workspace/ssh_key
   _TF_STATES_BACKEND: les-sagas-mp3-infrastructure
