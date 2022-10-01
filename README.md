@@ -68,7 +68,7 @@ export TF_VAR_app_subdomain="app-review-<unique id>"
 
 # For an api review
 export TF_VAR_api_version="<api version>"
-export TF_VAR_api_archive_url="<URL to download archive containing executable jar>"
+export TF_VAR_api_archive_url="<URL to download executable jar>"
 export TF_VAR_api_subdomain="api-review-<unique id>"
 
 ```
