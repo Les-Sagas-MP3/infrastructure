@@ -25,11 +25,11 @@ steps:
     export TF_VAR_ssh_private_key=$(cat $_SSH_KEY_PATH)
     export TF_VAR_ssh_public_key=$(cat $_SSH_KEY_PATH.pub)
 
-    EXTRA_ARGS=""
-    if [ -v TF_VAR_app_version ]; then EXTRA_ARGS="$EXTRA_ARGS -var=app_version=$TF_VAR_app_version"; fi
-    if [ -v TF_VAR_api_version ]; then EXTRA_ARGS="$EXTRA_ARGS -var=api_version=$TF_VAR_api_version"; fi
+    _EXTRA_ARGS=""
+    if [ -v TF_VAR_app_version ]; then _EXTRA_ARGS="$_EXTRA_ARGS -var=app_version=$TF_VAR_app_version"; fi
+    if [ -v TF_VAR_api_version ]; then _EXTRA_ARGS="$_EXTRA_ARGS -var=api_version=$TF_VAR_api_version"; fi
 
-    terraform plan -var-file=$_TF_WORKSPACE/environments/default_versions.tfvars -var-file=$_TF_WORKSPACE/environments/$_ENVIRONMENT_TEMPLATE.tfvars $EXTRA_ARGS -out $_TF_WORKSPACE/.plan/apply.tfplan
+    terraform plan -var-file=$_TF_WORKSPACE/environments/default_versions.tfvars -var-file=$_TF_WORKSPACE/environments/$_ENVIRONMENT_TEMPLATE.tfvars $_EXTRA_ARGS -out $_TF_WORKSPACE/.plan/apply.tfplan
     terraform show -no-color -json $_TF_WORKSPACE/.plan/apply.tfplan > $_TF_WORKSPACE/.plan/apply.json
   env:
   - 'TF_VAR_ssh_user=$_SSH_USER'
