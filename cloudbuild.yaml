@@ -72,6 +72,11 @@ steps:
   - 'ANSIBLE_HOST_KEY_CHECKING=False'
   dir: 'ansible'
 
+artifacts:
+  objects:
+    location: 'gs://les-sagas-mp3-build/$_ENVIRONMENT_NAME'
+    paths: ['$_TF_WORKSPACE/.plan/apply.json', 'ansible/inventory-$_ENVIRONMENT_NAME.yml']
+
 substitutions:
   _SSH_USER: provisioning
   _SSH_KEY_PATH: /workspace/ssh_key
