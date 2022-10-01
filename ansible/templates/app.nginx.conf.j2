@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name app.les-sagas-mp3.fr;
+    server_name {{ app.subdomain }}.{{ domain }};
 
     root /opt/les-sagas-mp3/app/current;
 
