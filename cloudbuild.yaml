@@ -13,7 +13,7 @@ steps:
   args: 
   - '-c'
   - |
-    terraform init -backend-config="bucket=$_TF_STATES_BACKEND" -backend-config="prefix=$_ENVIRONMENT"
+    terraform init -backend-config="bucket=$_TF_STATES_BACKEND" -backend-config="prefix=$_ENVIRONMENT_NAME"
   dir: 'terraform'
 
 - id: 'plan'
@@ -24,10 +24,18 @@ steps:
   - |
     export TF_VAR_ssh_private_key=$(cat $_SSH_KEY_PATH)
     export TF_VAR_ssh_public_key=$(cat $_SSH_KEY_PATH.pub)
-    terraform plan -var-file=$_TF_WORKSPACE/environments/$_ENVIRONMENT.tfvars -out $_TF_WORKSPACE/.plan/apply.tfplan
+
+    EXTRA_ARGS=""
+    if [ -v TF_VAR_app_version ]; then EXTRA_ARGS="$EXTRA_ARGS -var=app_version=$TF_VAR_app_version"; fi
+    if [ -v TF_VAR_api_version ]; then EXTRA_ARGS="$EXTRA_ARGS -var=api_version=$TF_VAR_api_version"; fi
+
+    terraform plan -var-file=$_TF_WORKSPACE/environments/default_versions.tfvars -var-file=$_TF_WORKSPACE/environments/$_ENVIRONMENT_TEMPLATE.tfvars $EXTRA_ARGS -out $_TF_WORKSPACE/.plan/apply.tfplan
     terraform show -no-color -json $_TF_WORKSPACE/.plan/apply.tfplan > $_TF_WORKSPACE/.plan/apply.json
   env:
   - 'TF_VAR_ssh_user=$_SSH_USER'
+  - 'TF_VAR_environment_name=$_ENVIRONMENT_NAME'
+  - 'TF_VAR_api_archive_url=$_API_ARCHIVE_URL'
+  - 'TF_VAR_app_archive_url=$_APP_ARCHIVE_URL'
   dir: 'terraform'
 
 - id: 'apply'
@@ -45,7 +53,7 @@ steps:
   args: 
   - '-c'
   - |
-    gcloud secrets versions access latest --secret=ssh_key_${_ENVIRONMENT}_${_SSH_USER} > $_SSH_KEY_PATH
+    gcloud secrets versions access latest --secret=ssh_key_${_ENVIRONMENT_NAME}_${_SSH_USER} > $_SSH_KEY_PATH
     echo -e "" >> $_SSH_KEY_PATH
 
 - id: 'install'
@@ -57,7 +65,7 @@ steps:
     chmod 600 $_SSH_KEY_PATH
     chmod og-rw ~/.netrc
     ansible-galaxy install -r requirements.yml
-    ansible-playbook -i inventory-$_ENVIRONMENT.yml --user=$_SSH_USER --private-key=$_SSH_KEY_PATH playbook.yml
+    ansible-playbook -i inventory-$_ENVIRONMENT_NAME.yml --user=$_SSH_USER --private-key=$_SSH_KEY_PATH playbook.yml
   env:
   - 'ANSIBLE_HOST_KEY_CHECKING=False'
   dir: 'ansible'

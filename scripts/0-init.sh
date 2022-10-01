@@ -8,6 +8,8 @@ GCP_DNS_MANAGED_ZONE_DNS_NAME="les-sagas-mp3.fr"
 GCP_DNS_MANAGED_ZONE_DESCRIPTION="Les Sagas MP3"
 GCP_CI_SA_NAME="infrastructure"
 GCP_CI_SA_DESCRIPTION="Infrastructure Deployment"
+GCP_CI_BUCKET_NAME="les-sagas-mp3-build"
+GCP_CI_SA_GITHUB="github"
 
 PROJECT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/.."
 
@@ -72,7 +74,7 @@ fi
 gcpAuthEmail=$(echo $gcpAuthAccountJson | jq -r '.[0].account')
 gcloud projects add-iam-policy-binding $gcpProjectId --member=user:$gcpAuthEmail --role=roles/storage.admin
 
-# Get CI service accounts
+# Get CI service account
 gcpServiceAccountsJson=$(gcloud iam service-accounts list --filter=name:$GCP_CI_SA_NAME --format=json)
 gcpServiceAccountsLength=$(echo $gcpServiceAccountsJson | jq '. | length')
 if [ $gcpServiceAccountsLength -eq 0 ]; then
@@ -82,4 +84,23 @@ if [ $gcpServiceAccountsLength -eq 0 ]; then
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/cloudbuild.builds.builder'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/storage.admin'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/secretmanager.secretAccessor'
+fi
+
+# Get CI Bucket
+gcpBucketsJson=$(gcloud alpha storage buckets list --filter=id:$GCP_CI_BUCKET_NAME --format=json)
+gcpBucketsLength=$(echo $gcpBucketsJson | jq '. | length')
+
+# Create CI bucket if not exists
+if [ $gcpBucketsLength -eq 0 ]; then
+    echo "▶️ Create GCP Bucket for Cloud Build"
+    gcloud alpha storage buckets create gs://$GCP_CI_BUCKET_NAME --location=$GCP_REGION
+fi
+
+# Get GitHub service account
+gcpServiceAccountsJson=$(gcloud iam service-accounts list --filter=name:$GCP_CI_SA_GITHUB --format=json)
+gcpServiceAccountsLength=$(echo $gcpServiceAccountsJson | jq '. | length')
+if [ $gcpServiceAccountsLength -eq 0 ]; then
+    echo "▶️ Create GitHub service account"
+    gcloud iam service-accounts create $GCP_CI_SA_GITHUB --display-name "GitHub"
+    gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_GITHUB@$gcpProjectId.iam.gserviceaccount.com --role='roles/storage.objectAdmin'
 fi

@@ -24,6 +24,7 @@ terraform init -backend-config="bucket=$TF_STATES_BACKEND" -backend-config="pref
 
 # Set local variables
 export TF_VAR_ssh_user=$(whoami)
+export TF_VAR_environment_name=$ENVIRONMENT_NAME
 
 # Build extra args to override variables in default_versions
 EXTRA_ARGS=""
