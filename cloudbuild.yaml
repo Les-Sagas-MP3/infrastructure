@@ -34,8 +34,10 @@ steps:
   env:
   - 'TF_VAR_ssh_user=$_SSH_USER'
   - 'TF_VAR_environment_name=$_ENVIRONMENT_NAME'
+  - 'TF_VAR_api_version=$_API_VERSION'
   - 'TF_VAR_api_archive_url=$_API_ARCHIVE_URL'
-  - 'TF_VAR_app_archive_url=$_APP_ARCHIVE_URL'
+  - 'TF_VAR_app_version=$_APP_VERSION'
+  - 'TF_VAR_api_archive_url=$_API_ARCHIVE_URL'
   dir: 'terraform'
 
 - id: 'apply'
