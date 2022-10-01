@@ -38,6 +38,7 @@ steps:
   - 'TF_VAR_api_archive_url=$_API_ARCHIVE_URL'
   - 'TF_VAR_app_subdomain=app-$_ENVIRONMENT_NAME'
   - 'TF_VAR_api_subdomain=api-$_ENVIRONMENT_NAME'
+  - 'TF_VAR_gcp_subnetwork_cidr=$_SUBNETWORK_CIDR'
   dir: 'terraform'
 
 - id: 'apply'

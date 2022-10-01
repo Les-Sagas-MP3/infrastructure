@@ -84,6 +84,9 @@ if [ $gcpServiceAccountsLength -eq 0 ]; then
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/cloudbuild.builds.builder'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/storage.admin'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/secretmanager.secretAccessor'
+    gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/cloudbuild.builds.editor'
+    gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/iam.serviceAccountOpenIdTokenCreator'
+    gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/iam.serviceAccountTokenCreator'
 fi
 
 # Get CI Bucket
@@ -94,13 +97,4 @@ gcpBucketsLength=$(echo $gcpBucketsJson | jq '. | length')
 if [ $gcpBucketsLength -eq 0 ]; then
     echo "▶️ Create GCP Bucket for Cloud Build"
     gcloud alpha storage buckets create gs://$GCP_CI_BUCKET_NAME --location=$GCP_REGION
-fi
-
-# Get GitHub service account
-gcpServiceAccountsJson=$(gcloud iam service-accounts list --filter=name:$GCP_CI_SA_GITHUB --format=json)
-gcpServiceAccountsLength=$(echo $gcpServiceAccountsJson | jq '. | length')
-if [ $gcpServiceAccountsLength -eq 0 ]; then
-    echo "▶️ Create GitHub service account"
-    gcloud iam service-accounts create $GCP_CI_SA_GITHUB --display-name "GitHub"
-    gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_GITHUB@$gcpProjectId.iam.gserviceaccount.com --role='roles/storage.objectAdmin'
 fi
