@@ -30,3 +30,21 @@ resource "google_storage_bucket_iam_policy" "environment" {
   bucket      = google_storage_bucket.environment.name
   policy_data = data.google_iam_policy.environment.policy_data
 }
+
+data "google_storage_bucket" "build" {
+  name = "les-sagas-mp3-build"
+}
+
+data "google_iam_policy" "build" {
+  binding {
+    role = "roles/storage.objectViewer"
+    members = [
+      "serviceAccount:${google_service_account.environment.email}",
+    ]
+  }
+}
+
+resource "google_storage_bucket_iam_policy" "build" {
+  bucket      = data.google_storage_bucket.build.name
+  policy_data = data.google_iam_policy.build.policy_data
+}
