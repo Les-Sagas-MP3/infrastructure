@@ -67,8 +67,8 @@ steps:
   dir: 'ansible'
 
 - id: 'notification'
-  name: ''
-  entrypoint: 'bash'
+  name: 'curlimages/curl:7.85.0'
+  entrypoint: 'ash'
   args:
   - '-c'
   - |
