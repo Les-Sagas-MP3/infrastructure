@@ -67,6 +67,19 @@ steps:
   - 'ANSIBLE_HOST_KEY_CHECKING=False'
   dir: 'ansible'
 
+- id: 'notification'
+  name: ''
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    curl \
+      -X POST \
+      -H "Accept: application/vnd.github+json" \
+      -H "Authorization: Bearer ${ _GITHUB_TOKEN }" \
+      https://api.github.com/repos/Les-Sagas-MP3/core/issues/$_GITHUB_PR/comments \
+      -d '{"body":"Deployment is finished.\nYou can access the app at : https://app-$_ENVIRONMENT_NAME.les-sagas-mp3.fr"}'
+
 artifacts:
   objects:
     location: 'gs://les-sagas-mp3-build/$_ENVIRONMENT_NAME'

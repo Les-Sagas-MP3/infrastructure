@@ -72,10 +72,10 @@ variable "app_version" {
   description = "App version"
 }
 
-variable "app_archive_url" {
-  type        = string
-  description = "App archive URL"
-  default     = ""
+variable "app_remote_src" {
+  type        = bool
+  description = "Is App dist located on /opt/les-sagas-mp3/build ?"
+  default     = false
 }
 
 variable "api_subdomain" {
@@ -89,8 +89,8 @@ variable "api_version" {
   description = "API version"
 }
 
-variable "api_archive_url" {
-  type        = string
-  description = "API archive URL"
-  default     = ""
+variable "api_remote_src" {
+  type        = bool
+  description = "Is API executable located on /opt/les-sagas-mp3/build ?"
+  default     = false
 }

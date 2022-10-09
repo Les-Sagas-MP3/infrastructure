@@ -36,7 +36,7 @@
       package:
         name: gcsfuse
         state: present
-    - name: Create install directory
+    - name: Create data directory
       file:
         path: "/opt/les-sagas-mp3/data"
         state: directory
@@ -44,6 +44,14 @@
         group: "lessagasmp3"
     - name: Mount bucket on VM
       shell: "gcsfuse --app-name les-sagas-mp3 --uid 1003 --gid 1003 {{ storage.bucket_name }} /opt/les-sagas-mp3/data"
+    - name: Create build directory
+      file:
+        path: "/opt/les-sagas-mp3/build"
+        state: directory
+        owner: "lessagasmp3"
+        group: "lessagasmp3"
+    - name: Mount bucket on VM
+      shell: "gcsfuse --app-name les-sagas-mp3 --uid 1003 --gid 1003 --only-dir {{ inventory_hostname }} les-sagas-mp3-build /opt/les-sagas-mp3/build" 
 
 - hosts: all
   name: Install PostgreSQL
@@ -76,12 +84,12 @@
       become: yes
       vars:
         version: "{{ api.version }}"
-        archive_url: "{{ api.archive_url }}"
+        remote_src: "{{ api.remote_src }}"
     - role: app
       become: yes
       vars:
         version: "{{ app.version }}"
-        archive_url: "{{ app.archive_url }}"
+        remote_src: "{{ app.remote_src }}"
 
 - hosts: all
   name: Install Nginx
