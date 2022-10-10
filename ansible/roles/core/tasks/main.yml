@@ -36,17 +36,16 @@
     owner: "{{ linux_user }}"
     group: "{{ linux_user }}"
     mode: "0755"
-  when: not remote_src
+  when: archive_url == ""
 
 - name: Download jar via archive URL
-  copy:
-    src: "/opt/les-sagas-mp3/build/core-{{ version }}-exec.jar"
+  get_url:
+    url: "{{ archive_url }}"
     dest: "{{ install_dir }}/{{ version }}/core-exec.jar"
-    remote_src: yes
     owner: "{{ linux_user }}"
     group: "{{ linux_user }}"
     mode: "0755"
-  when: remote_src
+  when: archive_url != ""
 
 - name: Create symbolic link to current version
   file:

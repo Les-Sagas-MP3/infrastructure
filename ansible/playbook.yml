@@ -84,12 +84,12 @@
       become: yes
       vars:
         version: "{{ api.version }}"
-        remote_src: "{{ api.remote_src }}"
+        archive_url: "{{ api.archive_url }}"
     - role: app
       become: yes
       vars:
         version: "{{ app.version }}"
-        remote_src: "{{ app.remote_src }}"
+        archive_url: "{{ app.archive_url }}"
 
 - hosts: all
   name: Install Nginx

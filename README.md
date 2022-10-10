@@ -64,9 +64,11 @@ The following environment variables must be defined :
 # For an app review
 export TF_VAR_app_version="<app version>"
 export TF_VAR_app_subdomain="review-app-<unique id>"
+export TF_VAR_app_archive_url="<URL to download archive containing dist>"
 
 # For an api review
 export TF_VAR_api_version="<api version>"
 export TF_VAR_api_subdomain="review-api-<unique id>"
+export TF_VAR_api_archive_url="<URL to download executable jar>"
 
 ```

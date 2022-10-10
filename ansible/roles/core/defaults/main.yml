@@ -1,3 +1,3 @@
 install_dir: /opt/les-sagas-mp3/core
 version: 0.9.3
-remote_src: no
+archive_url: ""
