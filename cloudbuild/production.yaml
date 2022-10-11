@@ -8,7 +8,7 @@ steps:
   - ssh-keygen -t ed25519 -C "$_SSH_USER" -f $_SSH_KEY_PATH -P ""
 
 - id: 'init'
-  name: 'hashicorp/terraform:1.2.9'
+  name: 'hashicorp/terraform:1.3.2'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -17,7 +17,7 @@ steps:
   dir: 'terraform'
 
 - id: 'plan'
-  name: 'hashicorp/terraform:1.2.9'
+  name: 'hashicorp/terraform:1.3.2'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -33,7 +33,7 @@ steps:
   dir: 'terraform'
 
 - id: 'apply'
-  name: 'hashicorp/terraform:1.2.9'
+  name: 'hashicorp/terraform:1.3.2'
   entrypoint: 'sh'
   args: 
   - '-c'
