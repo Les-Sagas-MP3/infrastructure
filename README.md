@@ -52,7 +52,7 @@ Run Ansible playbook :
 When not needed anymore, destroy all GCP resources :
 
 ```bash
-./scripts/9-tf-destroy.sh <env_template>
+./scripts/9-tf-destroy.sh <env_template> <env_name>
 ```
 
 ## Note for review environments
