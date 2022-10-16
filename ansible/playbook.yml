@@ -44,14 +44,6 @@
         group: "lessagasmp3"
     - name: Mount bucket on VM
       shell: "gcsfuse --app-name les-sagas-mp3 --uid 1003 --gid 1003 {{ storage.bucket_name }} /opt/les-sagas-mp3/data"
-    - name: Create build directory
-      file:
-        path: "/opt/les-sagas-mp3/build"
-        state: directory
-        owner: "lessagasmp3"
-        group: "lessagasmp3"
-    - name: Mount bucket on VM
-      shell: "gcsfuse --app-name les-sagas-mp3 --uid 1003 --gid 1003 --only-dir {{ inventory_hostname }} les-sagas-mp3-build /opt/les-sagas-mp3/build" 
 
 - hosts: all
   name: Install PostgreSQL

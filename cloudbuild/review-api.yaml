@@ -76,9 +76,10 @@ steps:
     curl \
       -X POST \
       -H "Accept: application/vnd.github+json" \
-      -H "Authorization: Bearer ${ _GITHUB_TOKEN }" \
+      -H "Authorization: Bearer $$GITHUB_TOKEN" \
       https://api.github.com/repos/Les-Sagas-MP3/core/issues/$_GITHUB_PR/comments \
       -d '{"body":"Deployment is finished.\nYou can access the app at : https://app-$_ENVIRONMENT_NAME.les-sagas-mp3.fr"}'
+  secretEnv: ['GITHUB_TOKEN']
 
 artifacts:
   objects:
@@ -90,6 +91,11 @@ substitutions:
   _SSH_KEY_PATH: /workspace/ssh_key
   _TF_STATES_BACKEND: les-sagas-mp3-infrastructure
   _TF_WORKSPACE: /workspace/terraform
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/798614005646/secrets/github-token/versions/1
+    env: 'GITHUB_TOKEN'
 
 options:
   logging: CLOUD_LOGGING_ONLY

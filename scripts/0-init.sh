@@ -10,6 +10,7 @@ GCP_CI_SA_NAME="infrastructure"
 GCP_CI_SA_DESCRIPTION="Infrastructure Deployment"
 GCP_CI_BUCKET_NAME="les-sagas-mp3-build"
 GCP_CI_SA_GITHUB="github"
+GCP_CI_GITHUB_TOKEN="github-token"
 
 PROJECT_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )/.."
 
@@ -97,4 +98,12 @@ gcpBucketsLength=$(echo $gcpBucketsJson | jq '. | length')
 if [ $gcpBucketsLength -eq 0 ]; then
     echo "▶️ Create GCP Bucket for Cloud Build"
     gcloud alpha storage buckets create gs://$GCP_CI_BUCKET_NAME --location=$GCP_REGION
+fi
+
+# Create secret for GitHub notifications
+gcpSecretGitHubTokenJson=$(gcloud secrets list --filter=name:$GCP_CI_GITHUB_TOKEN --format=json)
+gcpSecretGitHubTokenLength=$(echo $gcpSecretGitHubTokenJson | jq '. | length')
+if [ $gcpSecretGitHubTokenLength -eq 0 ]; then
+    echo "▶️ Create GCP secret for GitHub Token"
+    printf "$GITHUB_TOKEN" | gcloud secrets create $GCP_CI_GITHUB_TOKEN --data-file=-
 fi
