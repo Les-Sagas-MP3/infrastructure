@@ -1,0 +1,40 @@
+
+- name: Lecture des variables
+  include_vars:
+    file: vars.yml
+
+- name: Téléchargement des archives
+  get_url:
+    url: "{{ item.url }}"
+    dest: /tmp/openjdk-{{ item.version }}.tar.gz
+    checksum: "{{ item.checksum }}"
+  loop: "{{ versions }}"
+
+- name: Création du répertoire d'installation
+  file:
+    path: "{{ install_dir }}"
+    state: directory
+
+- name: Décompression des archives
+  unarchive:
+    remote_src: yes
+    src: /tmp/openjdk-{{ item.version }}.tar.gz
+    dest: "{{ install_dir }}"
+  loop: "{{ versions }}"
+
+- name: Récupération du nom du dossier décompressé
+  find:
+    paths: "{{ install_dir }}"
+    file_type: directory
+    patterns: 'jdk-{{ item.version }}*'
+  loop: "{{ versions }}"
+  register: java_home
+
+- name: Ajout du script de switch de versions
+  template:
+    src: setjava.sh.j2
+    dest: ~/.bashrc.d/setjava.sh
+
+- name: Switch sur la version par défaut
+  script:
+    cmd: "~/.bashrc.d/setjava.sh {{ default_version }}"

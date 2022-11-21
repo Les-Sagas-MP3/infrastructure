@@ -7,7 +7,5 @@ collections:
 roles:
   - src: geerlingguy.postgresql
     version: 3.4.0
-  - src: geerlingguy.java
-    version: 2.2.0
   - src: nginxinc.nginx
     version: 0.23.1

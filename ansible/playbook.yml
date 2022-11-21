@@ -84,11 +84,7 @@
 - hosts: all
   name: Install Java
   roles:
-    - name: geerlingguy.java
-      become: yes
-      vars:
-        java_packages:
-          - openjdk-18-jre
+    - name: openjdk
 
 - hosts: all
   name: Install Les Sagas MP3 components
