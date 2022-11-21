@@ -48,11 +48,6 @@ substitutions:
   _TF_STATES_BACKEND: les-sagas-mp3-infrastructure
   _TF_WORKSPACE: /workspace/terraform
 
-availableSecrets:
-  secretManager:
-  - versionName: projects/798614005646/secrets/github-token/versions/1
-    env: 'GITHUB_TOKEN'
-
 options:
   logging: CLOUD_LOGGING_ONLY
   substitution_option: 'ALLOW_LOOSE'
