@@ -17,7 +17,7 @@ steps:
   - |
     export TF_VAR_ssh_private_key="foo"
     export TF_VAR_ssh_public_key="bar"
-    terraform plan -var-file=$_TF_WORKSPACE/environments/default_versions.tfvars -var-file=$_TF_WORKSPACE/environments/review-api.tfvars -var=api_version=$_API_VERSION -out $_TF_WORKSPACE/.plan/destroy.tfplan
+    terraform plan -var-file=$_TF_WORKSPACE/environments/default_versions.tfvars -var-file=$_TF_WORKSPACE/environments/review-api.tfvars -var=api_version=$_API_VERSION -out $_TF_WORKSPACE/.plan/destroy.tfplan -destroy
     terraform show -no-color -json $_TF_WORKSPACE/.plan/destroy.tfplan > $_TF_WORKSPACE/.plan/destroy.json
   env:
   - 'TF_VAR_ssh_user=$_SSH_USER'
@@ -34,7 +34,7 @@ steps:
   args: 
   - '-c'
   - |
-    terraform apply -destroy -auto-approve $_TF_WORKSPACE/.plan/destroy.tfplan
+    terraform destroy -auto-approve $_TF_WORKSPACE/.plan/destroy.tfplan
   dir: 'terraform'
 
 artifacts:
