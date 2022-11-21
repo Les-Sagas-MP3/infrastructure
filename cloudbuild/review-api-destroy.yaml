@@ -22,10 +22,10 @@ steps:
   env:
   - 'TF_VAR_ssh_user=$_SSH_USER'
   - 'TF_VAR_environment_name=$_ENVIRONMENT_NAME'
-  - 'TF_VAR_api_archive_url=$_API_ARCHIVE_URL'
+  - 'TF_VAR_api_archive_url=https://example.org'
   - 'TF_VAR_api_subdomain=api-$_ENVIRONMENT_NAME'
   - 'TF_VAR_app_subdomain=app-$_ENVIRONMENT_NAME'
-  - 'TF_VAR_gcp_subnetwork_cidr=$_SUBNETWORK_CIDR'
+  - 'TF_VAR_gcp_subnetwork_cidr=0.0.0.0/24'
   dir: 'terraform'
 
 - id: 'apply'

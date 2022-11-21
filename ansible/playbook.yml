@@ -7,21 +7,6 @@
       update_cache: true
       cache_valid_time: 3600
       force_apt_get: true
-  - name: Création du répertoire ~/.bashrc.d
-    file:
-      path: "~/.bashrc.d"
-      state: directory
-  - name: Sourcing des fichiers dans ~/.bashrc.d
-    blockinfile:
-      dest: "~/.bashrc"
-      block: |
-        while read filename
-        do
-          source "$filename"
-        done < <(find -L ~/.bashrc.d -type f)
-      marker: '# {mark} ANSIBLE MANAGED BLOCK - ~.bashrc.d'
-      insertbefore: BOF
-      create: yes
 
 - hosts: all
   name: Create technical user
@@ -30,6 +15,22 @@
     - user:
         name: lessagasmp3
         uid: 1003
+    - name: Création du répertoire ~/.bashrc.d
+      file:
+        path: "/home/lessagasmp3/.bashrc.d"
+        state: directory
+        owner: lessagasmp3
+    - name: Sourcing des fichiers dans ~/.bashrc.d
+      blockinfile:
+        dest: "/home/lessagasmp3/.bashrc"
+        block: |
+          while read filename
+          do
+            source "$filename"
+          done < <(find -L ~/.bashrc.d -type f)
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - ~.bashrc.d'
+        insertbefore: BOF
+        create: yes
 
 - hosts: all
   name: Mount db disk
@@ -101,6 +102,8 @@
   roles:
     - name: openjdk
       become: yes
+      vars:
+        owner: lessagasmp3
 
 - hosts: all
   name: Install Les Sagas MP3 components
