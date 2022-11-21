@@ -2,7 +2,7 @@
 - name: Download archives
   get_url:
     url: "{{ url }}"
-    dest: /tmp/openjdk.tar.gz
+    dest: /tmp/openjdk-{{ version }}.tar.gz
     checksum: "{{ checksum }}"
 
 - name: Create install directory
@@ -13,7 +13,7 @@
 - name: Decompress archives
   unarchive:
     remote_src: yes
-    src: /tmp/openjdk.tar.gz
+    src: /tmp/openjdk-{{ version }}.tar.gz
     dest: "{{ install_dir }}"
 
 - name: Get unarchive file names
@@ -26,4 +26,4 @@
 - name: Correct java version selected
   community.general.alternatives:
     name: java
-    path: "{{ java_home.results.files[0].path }}/bin/java"
+    path: "{{ java_home.files[0].path }}/bin/java"
