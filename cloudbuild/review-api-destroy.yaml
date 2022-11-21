@@ -34,7 +34,7 @@ steps:
   args: 
   - '-c'
   - |
-    terraform destroy -auto-approve $_TF_WORKSPACE/.plan/destroy.tfplan
+    terraform apply -auto-approve $_TF_WORKSPACE/.plan/destroy.tfplan
   dir: 'terraform'
 
 artifacts:
