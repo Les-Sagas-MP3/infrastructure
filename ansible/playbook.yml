@@ -7,6 +7,21 @@
       update_cache: true
       cache_valid_time: 3600
       force_apt_get: true
+  - name: Création du répertoire ~/.bashrc.d
+    file:
+      path: "~/.bashrc.d"
+      state: directory
+  - name: Sourcing des fichiers dans ~/.bashrc.d
+    blockinfile:
+      dest: "~/.bashrc"
+      block: |
+        while read filename
+        do
+          source "$filename"
+        done < <(find -L ~/.bashrc.d -type f)
+      marker: '# {mark} ANSIBLE MANAGED BLOCK - ~.bashrc.d'
+      insertbefore: BOF
+      create: yes
 
 - hosts: all
   name: Create technical user
