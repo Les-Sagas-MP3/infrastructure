@@ -85,6 +85,7 @@
   name: Install Java
   roles:
     - name: openjdk
+      become: yes
 
 - hosts: all
   name: Install Les Sagas MP3 components
