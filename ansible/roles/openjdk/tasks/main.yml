@@ -27,3 +27,4 @@
   community.general.alternatives:
     name: java
     path: "{{ java_home.files[0].path }}/bin/java"
+    link: /usr/bin/java
