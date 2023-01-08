@@ -1,0 +1,200 @@
+- hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: "Update Repository cache"
+    apt:
+      update_cache: true
+      cache_valid_time: 3600
+      force_apt_get: true
+
+- hosts: all
+  name: Create technical user
+  become: yes
+  tasks:
+    - user:
+        name: lessagasmp3
+        uid: 1003
+    - name: Création du répertoire ~/.bashrc.d
+      file:
+        path: "/home/lessagasmp3/.bashrc.d"
+        state: directory
+        owner: lessagasmp3
+    - name: Sourcing des fichiers dans ~/.bashrc.d
+      blockinfile:
+        dest: "/home/lessagasmp3/.bashrc"
+        block: |
+          while read filename
+          do
+            source "$filename"
+          done < <(find -L ~/.bashrc.d -type f)
+        marker: '# {mark} ANSIBLE MANAGED BLOCK - ~.bashrc.d'
+        insertbefore: BOF
+        create: yes
+
+- hosts: all
+  name: Mount db disk
+  become: yes
+  tasks:
+    - name: Format disk in ext4 format
+      community.general.filesystem:
+        fstype: ext4
+        dev: /dev/sdb
+    - name: Create db directory
+      file:
+        path: "/opt/les-sagas-mp3/db"
+        state: directory
+        owner: "lessagasmp3"
+        group: "lessagasmp3"
+    - name: Mount disk on directory
+      mount:
+        path: "/opt/les-sagas-mp3/db"
+        src: "/dev/sdb"
+        fstype: ext4
+        opts: discard,defaults
+        state: mounted
+
+- hosts: all
+  name: Mount bucket on data folder
+  become: yes
+  tasks:
+    - name: Add Google Cloud apt repository key.
+      get_url:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        dest: /etc/apt/trusted.gpg.d/gcloud.gpg
+        mode: '0644'
+        force: true
+    - name: Add Google Cloud apt repository
+      apt_repository: 
+        repo: 'deb http://packages.cloud.google.com/apt gcsfuse-focal main'
+        state: present 
+        filename: gcsfuse 
+        update_cache: yes
+    - name: Install gcsfuse
+      package:
+        name: gcsfuse
+        state: present
+    - name: Create data directory
+      file:
+        path: "/opt/les-sagas-mp3/data"
+        state: directory
+        owner: "lessagasmp3"
+        group: "lessagasmp3"
+    - name: Mount bucket on VM
+      shell: "gcsfuse --app-name les-sagas-mp3 --uid 1003 --gid 1003 {{ storage.bucket_name }} /opt/les-sagas-mp3/data"
+
+- hosts: all
+  name: Install PostgreSQL
+  roles:
+    - name: geerlingguy.postgresql
+      become: yes
+      vars:
+        postgresql_version: "14"
+        postgresql_databases:
+          - name: "{{ db.name }}"
+        postgresql_users:
+          - name: "{{ db.username }}"
+            password: "{{ db.password }}"
+        postgresql_data_dir: /opt/les-sagas-mp3/db/14/main
+
+- hosts: all
+  name: Install Java
+  roles:
+    - name: openjdk
+      become: yes
+      vars:
+        owner: lessagasmp3
+
+- hosts: all
+  name: Install Les Sagas MP3 components
+  vars:
+    linux_user: lessagasmp3
+  roles:
+    - role: core
+      become: yes
+      vars:
+        version: "{{ api.version }}"
+        archive_url: "{{ api.archive_url }}"
+    - role: app
+      become: yes
+      vars:
+        version: "{{ app.version }}"
+        archive_url: "{{ app.archive_url }}"
+
+- hosts: all
+  name: Install Nginx
+  become: yes
+  roles:
+    - role: nginxinc.nginx
+      vars:
+        nginx_version: "=1.21.6-1~jammy"
+        nginx_service_modify: true
+        nginx_service_timeout: 95
+        nginx_logrotate_conf_enable: true
+        nginx_logrotate_conf:
+          paths:
+            - /var/log/nginx/*.log
+          options:
+            - daily
+            - missingok
+            - rotate 14
+            - compress
+            - delaycompress
+            - notifempty
+            - sharedscripts
+  tasks:
+    - name: Create nginx conf for api component
+      template:
+        src: api.nginx.conf.j2
+        dest: "/etc/nginx/conf.d/api.conf"
+        mode: '0644'
+    - name: Create nginx conf for app component
+      template:
+        src: app.nginx.conf.j2
+        dest: "/etc/nginx/conf.d/app.conf"
+        mode: '0644'
+    - name: Reload nginx
+      systemd:
+        state: restarted
+        name: nginx
+
+- hosts: all
+  name: Configure SSL
+  become: yes
+  tasks:
+    - name: Checking python
+      package:
+        name: python3-pip
+        state: present
+    - name: Checking cron
+      package:
+        name: cron
+        state: present
+    - name: Install certbot
+      pip:
+        name:
+          - certbot
+          - certbot-nginx
+        executable: pip3
+    - name: Register certbot
+      shell: |
+        certbot -n register --agree-tos --email lessagasmp3@gmail.com
+        touch /etc/letsencrypt/.registered
+      args:
+        creates: /etc/letsencrypt/.registered
+    - name: Setup cronjob for renewal
+      cron:
+        name: certbot-renewal
+        job: "/bin/bash -lc '/usr/local/bin/certbot -q renew'"
+        minute: "0"
+        hour: "14"
+    - name: Get api certificate
+      command: "/usr/local/bin/certbot -n --nginx -d {{ api.subdomain }}.{{ domain }}"
+      ignore_errors: true
+    - name: Get app certificate
+      command: "/usr/local/bin/certbot -n --nginx -d {{ app.subdomain }}.{{ domain }}"
+      ignore_errors: true
+    - name: Reload nginx
+      systemd:
+        state: restarted
+        name: nginx

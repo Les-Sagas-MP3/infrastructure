@@ -1,0 +1,27 @@
+#!/bin/bash
+
+setjava() {
+
+        {% for item in versions %}
+        JDK{{ item.version }}={{ java_home.results[loop.index - 1].files[0].path }}
+        {% endfor %}
+
+        case "$1" in
+        {% for item in versions %}
+                "{{ item.version }}")
+                        echo "export JAVA_HOME=$JDK{{ item.version }}" > ~/.bashrc.d/currentjava.sh
+                        ;;
+        {% endfor %}
+                *)
+                        echo "Unknown JDK version!"
+                        ;;
+        esac
+        echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.bashrc.d/currentjava.sh
+        source ~/.bashrc.d/currentjava.sh
+
+        echo "Calling 'java' to output the currently used java version"
+        java -version
+
+}
+
+export -f setjava

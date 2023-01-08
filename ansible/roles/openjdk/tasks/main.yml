@@ -1,0 +1,30 @@
+
+- name: Download archives
+  get_url:
+    url: "{{ url }}"
+    dest: /tmp/openjdk-{{ version }}.tar.gz
+    checksum: "{{ checksum }}"
+
+- name: Create install directory
+  file:
+    path: "{{ install_dir }}"
+    state: directory
+
+- name: Decompress archives
+  unarchive:
+    remote_src: yes
+    src: /tmp/openjdk-{{ version }}.tar.gz
+    dest: "{{ install_dir }}"
+
+- name: Get unarchive file names
+  find:
+    paths: "{{ install_dir }}"
+    file_type: directory
+    patterns: 'jdk-{{ version }}*'
+  register: java_home
+
+- name: Correct java version selected
+  community.general.alternatives:
+    name: java
+    path: "{{ java_home.files[0].path }}/bin/java"
+    link: /usr/bin/java

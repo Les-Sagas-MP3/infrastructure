@@ -1,0 +1,50 @@
+- name: Download app package
+  get_url:
+    url: https://github.com/Les-Sagas-MP3/app/releases/download/{{ version }}/les-sagas-mp3.tar.gz
+    dest: /tmp/les-sagas-mp3.tar.gz
+  when: archive_url == ""
+
+- name: Download app package via archive URL
+  get_url:
+    url: "{{ archive_url }}"
+    dest: /tmp/les-sagas-mp3.tar.gz
+  when: archive_url != ""
+
+- name: Create install directory
+  file:
+    path: "{{ install_dir }}"
+    state: directory
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+
+- name: Create version directory
+  become: yes
+  file:
+    path: "{{ install_dir }}/{{ version }}"
+    state: directory
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+
+- name: Unarchive app package
+  unarchive:
+    src: /tmp/les-sagas-mp3.tar.gz
+    remote_src: yes
+    dest: "{{ install_dir }}/{{ version }}"
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+
+- name: Set app configuration
+  template:
+    src: config.json.j2
+    dest: "{{ install_dir }}/{{ version }}/www/assets/config.json"
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+    mode: '0644'
+
+- name: Create symbolic link to current version
+  file:
+    src: "{{ install_dir }}/{{ version }}/www"
+    dest: "{{ install_dir }}/current"
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+    state: link

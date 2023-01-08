@@ -1,0 +1,102 @@
+steps:
+
+- id: 'generate-ssh-key'
+  name: 'lgatica/openssh-client:latest'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - ssh-keygen -t ed25519 -C "$_SSH_USER" -f $_SSH_KEY_PATH -P ""
+
+- id: 'init'
+  name: 'hashicorp/terraform:1.3.2'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - |
+    terraform init -backend-config="bucket=$_TF_STATES_BACKEND" -backend-config="prefix=$_ENVIRONMENT_NAME"
+  dir: 'terraform'
+
+- id: 'plan'
+  name: 'hashicorp/terraform:1.3.2'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - |
+    export TF_VAR_ssh_private_key=$(cat $_SSH_KEY_PATH)
+    export TF_VAR_ssh_public_key=$(cat $_SSH_KEY_PATH.pub)
+    terraform plan -var-file=$_TF_WORKSPACE/environments/default_versions.tfvars -var-file=$_TF_WORKSPACE/environments/review-api.tfvars -var=api_version=$_API_VERSION -out $_TF_WORKSPACE/.plan/apply.tfplan
+    terraform show -no-color -json $_TF_WORKSPACE/.plan/apply.tfplan > $_TF_WORKSPACE/.plan/apply.json
+  env:
+  - 'TF_VAR_ssh_user=$_SSH_USER'
+  - 'TF_VAR_environment_name=$_ENVIRONMENT_NAME'
+  - 'TF_VAR_api_archive_url=$_API_ARCHIVE_URL'
+  - 'TF_VAR_api_subdomain=api-$_ENVIRONMENT_NAME'
+  - 'TF_VAR_app_subdomain=app-$_ENVIRONMENT_NAME'
+  - 'TF_VAR_gcp_subnetwork_cidr=$_SUBNETWORK_CIDR'
+  dir: 'terraform'
+
+- id: 'apply'
+  name: 'hashicorp/terraform:1.3.2'
+  entrypoint: 'sh'
+  args: 
+  - '-c'
+  - |
+    terraform apply -auto-approve $_TF_WORKSPACE/.plan/apply.tfplan
+  dir: 'terraform'
+
+- id: get-ssh-secret
+  name: gcr.io/cloud-builders/gcloud
+  entrypoint: 'bash'
+  args: 
+  - '-c'
+  - |
+    gcloud secrets versions access latest --secret=ssh_key_${_ENVIRONMENT_NAME}_${_SSH_USER} > $_SSH_KEY_PATH
+    echo -e "" >> $_SSH_KEY_PATH
+
+- id: 'install'
+  name: 'cnieg/ansible:1.0.49-ansible-5.8.0-r0'
+  entrypoint: 'ash'
+  args: 
+  - '-c'
+  - |
+    chmod 600 $_SSH_KEY_PATH
+    chmod og-rw ~/.netrc
+    ansible-galaxy install -r requirements.yml
+    ansible-playbook -i inventory-$_ENVIRONMENT_NAME.yml --user=$_SSH_USER --private-key=$_SSH_KEY_PATH playbook.yml
+  env:
+  - 'ANSIBLE_HOST_KEY_CHECKING=False'
+  dir: 'ansible'
+
+- id: 'notification'
+  name: 'curlimages/curl:7.85.0'
+  entrypoint: 'ash'
+  args:
+  - '-c'
+  - |
+    curl \
+      -X POST \
+      -H "Accept: application/vnd.github+json" \
+      -H "Authorization: Bearer $$GITHUB_TOKEN" \
+      https://api.github.com/repos/Les-Sagas-MP3/core/issues/$_GITHUB_PR/comments \
+      -d '{"body":"Deployment is finished.\nYou can access the app at : https://app-$_ENVIRONMENT_NAME.les-sagas-mp3.fr"}'
+  secretEnv: ['GITHUB_TOKEN']
+
+artifacts:
+  objects:
+    location: 'gs://les-sagas-mp3-build/$_ENVIRONMENT_NAME'
+    paths: ['$_TF_WORKSPACE/.plan/apply.json', 'ansible/inventory-$_ENVIRONMENT_NAME.yml']
+
+substitutions:
+  _SSH_USER: provisioning
+  _SSH_KEY_PATH: /workspace/ssh_key
+  _TF_STATES_BACKEND: les-sagas-mp3-infrastructure
+  _TF_WORKSPACE: /workspace/terraform
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/798614005646/secrets/github-token/versions/1
+    env: 'GITHUB_TOKEN'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  substitution_option: 'ALLOW_LOOSE'

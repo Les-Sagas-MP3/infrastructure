@@ -1,0 +1,19 @@
+all:
+  hosts:
+    ${environment_name}:
+      ansible_host: ${ip_address}
+      domain: ${domain}
+      db:
+        name: lessagasmp3
+        username: lessagasmp3
+        password: lessagasmp3
+      storage:
+        bucket_name: ${bucket_name}
+      api:
+        subdomain: ${api_subdomain}
+        version: ${api_version}
+        archive_url: ${api_archive_url}
+      app:
+        subdomain: ${app_subdomain}
+        version: ${app_version}
+        archive_url: ${app_archive_url}
