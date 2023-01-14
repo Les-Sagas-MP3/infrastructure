@@ -21,6 +21,14 @@
     dest: "/etc/systemd/system/les-sagas-mp3.service"
     state: link
 
+- name: Install Firebase credentials file
+  copy:
+    src: "{{ firebase_credentials }}"
+    dest: "{{ install_dir }}/firebase_credentials.json"
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+    mode: '0640'
+
 - name: Create version directory
   become: yes
   file:

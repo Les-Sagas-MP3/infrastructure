@@ -52,6 +52,8 @@ steps:
   - |
     gcloud secrets versions access latest --secret=ssh_key_${_ENVIRONMENT_NAME}_${_SSH_USER} > $_SSH_KEY_PATH
     echo -e "" >> $_SSH_KEY_PATH
+    gcloud secrets versions access latest --secret=firebase-credentials > $_FIREBASE_CREDENTIALS_PATH
+    echo -e "" >> $_FIREBASE_CREDENTIALS_PATH
 
 - id: 'install'
   name: 'cnieg/ansible:1.0.49-ansible-5.8.0-r0'
@@ -62,7 +64,7 @@ steps:
     chmod 600 $_SSH_KEY_PATH
     chmod og-rw ~/.netrc
     ansible-galaxy install -r requirements.yml
-    ansible-playbook -i inventory-$_ENVIRONMENT_NAME.yml --user=$_SSH_USER --private-key=$_SSH_KEY_PATH playbook.yml
+    ansible-playbook -i inventory-$_ENVIRONMENT_NAME.yml --extra-vars "firebase_credentials=$_FIREBASE_CREDENTIALS_PATH" --user=$_SSH_USER --private-key=$_SSH_KEY_PATH playbook.yml
   env:
   - 'ANSIBLE_HOST_KEY_CHECKING=False'
   dir: 'ansible'
@@ -91,6 +93,7 @@ substitutions:
   _SSH_KEY_PATH: /workspace/ssh_key
   _TF_STATES_BACKEND: les-sagas-mp3-infrastructure
   _TF_WORKSPACE: /workspace/terraform
+  _FIREBASE_CREDENTIALS_PATH: /workspace/firebase_credentials.json
 
 availableSecrets:
   secretManager:
