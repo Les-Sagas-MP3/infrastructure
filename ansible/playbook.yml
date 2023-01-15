@@ -12,9 +12,14 @@
   name: Create technical user
   become: yes
   tasks:
+    - group:
+        name: lessagasmp3
+        state: present
+        gid: 900
     - user:
         name: lessagasmp3
         uid: 900
+        group: lessagasmp3
     - name: Création du répertoire ~/.bashrc.d
       file:
         path: "/home/lessagasmp3/.bashrc.d"
