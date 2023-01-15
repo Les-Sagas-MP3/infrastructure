@@ -1,0 +1,22 @@
+#!/bin/sh
+
+OUTPUTDIR="{{ output_dir }}"
+
+PGHOSTNAME="{{ pg.hostname }}"
+PGPORT="{{ pg.port }}"
+PGDATABASE="{{ pg.database }}"
+PGUSERNAME="{{ pg.username }}"
+
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/postgres/bin:/usr/local/pgsql/bin
+DATE=`date +%Y-%m-%d`
+DOW=`date +%A`
+FOLDER=$OUTPUTDIR/$DATE.$DOW
+
+mkdir -p $FOLDER
+
+FILENAME=$FOLDER/db.tar
+pg_dump -h $PGHOSTNAME -p $PGPORT -U $PGUSERNAME -f "$FOLDER/db.tar.tar" -F t $PGDATABASE 2>> "$FOLDER/error.log"
+
+tar czf $FOLDER/files.tar.gz {{ files_dir }}
+
+find $OUTPUTDIR -mtime +5 -type d | xargs rm -f -r;

@@ -1,0 +1,18 @@
+script_location: /opt/les-sagas-mp3/backup.sh
+files_dir: /opt/les-sagas-mp3/data/files
+output_dir: /opt/les-sagas-mp3/data/backup
+
+pg:
+  hostname: localhost
+  port: 5432
+  database: lessagasmp3
+  username: lessagasmp3
+  password: lessagasmp3
+
+cron:
+  minute: '0'
+  hour: '4'
+  day: '*'
+  month: '*'
+  weekday: '*'
+  

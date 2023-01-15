@@ -1,0 +1,33 @@
+- name: "Install PostgreSQL client"
+  apt:
+    name: postgresql-client
+    state: present
+
+- name: "Copy script"
+  template:
+    src: backup.sh.j2
+    dest: "{{ script_location }}"
+    mode: 0755
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+
+- name: "Add postgresql config"
+  template:
+    src: pgpass.j2
+    dest: "/home/{{ linux_user }}/.pgpass"
+    mode: 0600
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+  no_log: true
+
+- name: Add cron entry
+  cron:
+    name: "lessagasmp3_backup"
+    minute: "{{ cron.minute }}"
+    hour: "{{ cron.hour }}"
+    day: "{{ cron.day }}"
+    month: "{{ cron.month }}"
+    weekday: "{{ cron.weekday }}"
+    job: "{{ script_location }}"
+    user: "{{ linux_user }}"
+  no_log: true

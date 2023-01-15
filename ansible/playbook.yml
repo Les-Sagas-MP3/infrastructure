@@ -96,6 +96,8 @@
           - name: "{{ db.username }}"
             password: "{{ db.password }}"
         postgresql_data_dir: /opt/les-sagas-mp3/db/14/main
+    - name: backup
+      become: yes
 
 - hosts: all
   name: Install Java
