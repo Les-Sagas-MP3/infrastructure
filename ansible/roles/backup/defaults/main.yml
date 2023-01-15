@@ -15,4 +15,3 @@ cron:
   day: '*'
   month: '*'
   weekday: '*'
-  

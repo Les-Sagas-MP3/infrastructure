@@ -13,7 +13,7 @@
 
 - name: "Add postgresql config"
   template:
-    src: pgpass.j2
+    src: .pgpass.j2
     dest: "/home/{{ linux_user }}/.pgpass"
     mode: 0600
     owner: "{{ linux_user }}"
