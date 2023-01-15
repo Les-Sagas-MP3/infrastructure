@@ -6,7 +6,7 @@ After=syslog.target
 User=lessagasmp3
 ExecStart={{ install_dir }}/core-exec.jar
 SuccessExitStatus=143
-Environment="SERVER_NAME={{ inventory_name }}"
+Environment="SERVER_NAME={{ inventory_hostname }}"
 Environment="FIREBASE_URL=https://les-sagas-mp3.firebaseio.com"
 Environment="GOOGLE_APPLICATION_CREDENTIALS={{ install_dir }}/firebase_credentials.json"
 Environment="FR_LESSAGASMP3_CORE_URL=http://{{ ansible_host }}:8080"
