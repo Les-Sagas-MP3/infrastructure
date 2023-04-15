@@ -1,4 +1,4 @@
 version: 19
-url: https://download.java.net/java/GA/jdk19.0.1/afdd2e245b014143b62ccb916125e3ce/10/GPL/openjdk-19.0.1_linux-x64_bin.tar.gz
-checksum: sha256:7a466882c7adfa369319fe4adeb197ee5d7f79e75d641e9ef94abee1fc22b1fa
+url: https://download.java.net/java/GA/jdk20/bdc68b4b9cbc4ebcb30745c85038d91d/36/GPL/openjdk-20_linux-x64_bin.tar.gz
+checksum: sha256:bb863b2d542976d1ae4b7b81af3e78b1e4247a64644350b552d298d8dc5980dc
 install_dir: /opt/openjdk/
