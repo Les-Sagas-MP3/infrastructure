@@ -1,4 +1,4 @@
-version: 19
+version: 20
 url: https://download.java.net/java/GA/jdk20/bdc68b4b9cbc4ebcb30745c85038d91d/36/GPL/openjdk-20_linux-x64_bin.tar.gz
 checksum: sha256:bb863b2d542976d1ae4b7b81af3e78b1e4247a64644350b552d298d8dc5980dc
 install_dir: /opt/openjdk/
