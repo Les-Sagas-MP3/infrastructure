@@ -39,7 +39,7 @@
 
 - name: Download jar
   get_url:
-    url: https://github.com/Les-Sagas-MP3/core/releases/download/{{ version }}/core-exec.jar
+    url: https://github.com/Les-Sagas-MP3/core/releases/download/{{ version }}/core-{{ version }}-exec.jar
     dest: "{{ install_dir }}/{{ version }}/core-exec.jar"
     owner: "{{ linux_user }}"
     group: "{{ linux_user }}"
