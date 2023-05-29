@@ -69,11 +69,11 @@
         dest: /etc/apt/trusted.gpg.d/gcloud.gpg
         mode: '0644'
         force: true
-    - name: Add Google Cloud apt repository
-      apt_repository: 
-        repo: 'deb http://packages.cloud.google.com/apt gcsfuse-focal main'
-        state: present 
-        filename: gcsfuse 
+    - name: Add Google Cloud SDK package repository source
+      apt_repository:
+        repo: "deb [signed-by=/etc/apt/trusted.gpg.d/gcloud.gpg] https://packages.cloud.google.com/apt gcsfuse-jammy main"
+        state: present
+        filename: /etc/apt/sources.list.d/gcsfuse.list
         update_cache: yes
     - name: Install gcsfuse
       package:
