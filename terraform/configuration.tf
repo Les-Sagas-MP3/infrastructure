@@ -1,5 +1,5 @@
 terraform {
   backend "gcs" {}
 
-  required_version = "~> 1.3"
+  required_version = "~> 1.4"
 }

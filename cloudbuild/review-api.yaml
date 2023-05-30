@@ -8,7 +8,7 @@ steps:
   - ssh-keygen -t ed25519 -C "$_SSH_USER" -f $_SSH_KEY_PATH -P ""
 
 - id: 'init'
-  name: 'hashicorp/terraform:1.3.2'
+  name: 'hashicorp/terraform:1.4.6'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -17,7 +17,7 @@ steps:
   dir: 'terraform'
 
 - id: 'plan'
-  name: 'hashicorp/terraform:1.3.2'
+  name: 'hashicorp/terraform:1.4.6'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -36,7 +36,7 @@ steps:
   dir: 'terraform'
 
 - id: 'apply'
-  name: 'hashicorp/terraform:1.3.2'
+  name: 'hashicorp/terraform:1.4.6'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -45,7 +45,7 @@ steps:
   dir: 'terraform'
 
 - id: get-ssh-secret
-  name: gcr.io/cloud-builders/gcloud
+  name: gcr.io/cloud-builders/gcloud:latest
   entrypoint: 'bash'
   args: 
   - '-c'
@@ -56,7 +56,7 @@ steps:
     echo -e "" >> $_FIREBASE_CREDENTIALS_PATH
 
 - id: 'install'
-  name: 'cnieg/ansible:1.0.49-ansible-5.8.0-r0'
+  name: 'cnieg/ansible:1.0.56-ansible-6.6.0-r0'
   entrypoint: 'ash'
   args: 
   - '-c'
@@ -70,7 +70,7 @@ steps:
   dir: 'ansible'
 
 - id: 'notification'
-  name: 'curlimages/curl:7.85.0'
+  name: 'curlimages/curl:8.1.1'
   entrypoint: 'ash'
   args:
   - '-c'

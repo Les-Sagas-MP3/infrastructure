@@ -66,7 +66,7 @@
     - name: Add Google Cloud apt repository key.
       get_url:
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-        dest: /etc/apt/trusted.gpg.d/gcloud.gpg
+        dest: /etc/apt/trusted.gpg.d/gcloud.asc
         mode: '0644'
         force: true
     - name: Add Google Cloud SDK package repository source

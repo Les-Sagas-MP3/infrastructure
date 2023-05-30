@@ -1,5 +1,5 @@
 - name: "Install PostgreSQL client"
-  apt:
+  package:
     name: postgresql-client
     state: present
 
@@ -20,6 +20,16 @@
     group: "{{ linux_user }}"
   no_log: true
 
+- name: Install crontab
+  package:
+    name: cron
+    state: present
+
+- name: Enable cron on startup
+  service:
+    name: cron
+    enabled: true
+
 - name: Add cron entry
   cron:
     name: "lessagasmp3_backup"
@@ -30,4 +40,3 @@
     weekday: "{{ cron.weekday }}"
     job: "{{ script_location }}"
     user: "{{ linux_user }}"
-  no_log: true
