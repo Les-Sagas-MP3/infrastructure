@@ -1,6 +1,6 @@
 - name: Download app package
   get_url:
-    url: https://github.com/Les-Sagas-MP3/app/releases/download/{{ version }}/les-sagas-mp3.tar.gz
+    url: https://github.com/Les-Sagas-MP3/app/releases/download/{{ version }}/www.tar.gz
     dest: /tmp/les-sagas-mp3.tar.gz
   when: archive_url == ""
 
