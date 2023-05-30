@@ -1,5 +1,5 @@
 - hosts: all
-  become: yes
+  become: true
   become_method: sudo
   tasks:
   - name: "Update Repository cache"
@@ -10,7 +10,7 @@
 
 - hosts: all
   name: Create technical user
-  become: yes
+  become: true
   tasks:
     - group:
         name: lessagasmp3
@@ -35,11 +35,11 @@
           done < <(find -L ~/.bashrc.d -type f)
         marker: '# {mark} ANSIBLE MANAGED BLOCK - ~.bashrc.d'
         insertbefore: BOF
-        create: yes
+        create: true
 
 - hosts: all
   name: Mount db disk
-  become: yes
+  become: true
   tasks:
     - name: Format disk in ext4 format
       community.general.filesystem:
@@ -61,7 +61,7 @@
 
 - hosts: all
   name: Mount bucket on data folder
-  become: yes
+  become: true
   tasks:
     - name: Add Google Cloud apt repository key.
       get_url:
@@ -71,10 +71,10 @@
         force: true
     - name: Add Google Cloud SDK package repository source
       apt_repository:
-        repo: "deb [signed-by=/etc/apt/trusted.gpg.d/gcloud.gpg] https://packages.cloud.google.com/apt gcsfuse-jammy main"
+        repo: "deb https://packages.cloud.google.com/apt gcsfuse-jammy main"
         state: present
         filename: /etc/apt/sources.list.d/gcsfuse.list
-        update_cache: yes
+        update_cache: true
     - name: Install gcsfuse
       package:
         name: gcsfuse
@@ -91,8 +91,8 @@
 - hosts: all
   name: Install PostgreSQL
   roles:
-    - name: geerlingguy.postgresql
-      become: yes
+    - role: geerlingguy.postgresql
+      become: true
       vars:
         postgresql_version: "14"
         postgresql_databases:
@@ -101,16 +101,16 @@
           - name: "{{ db.username }}"
             password: "{{ db.password }}"
         postgresql_data_dir: /opt/les-sagas-mp3/db/14/main
-    - name: backup
-      become: yes
+    - role: backup
+      become: true
       vars:
         linux_user: lessagasmp3
 
 - hosts: all
   name: Install Java
   roles:
-    - name: openjdk
-      become: yes
+    - role: openjdk
+      become: true
       vars:
         owner: lessagasmp3
 
@@ -120,19 +120,19 @@
     linux_user: lessagasmp3
   roles:
     - role: core
-      become: yes
+      become: true
       vars:
         version: "{{ api.version }}"
         archive_url: "{{ api.archive_url }}"
     - role: app
-      become: yes
+      become: true
       vars:
         version: "{{ app.version }}"
         archive_url: "{{ app.archive_url }}"
 
 - hosts: all
   name: Install Nginx
-  become: yes
+  become: true
   roles:
     - role: nginxinc.nginx
       vars:
@@ -169,7 +169,7 @@
 
 - hosts: all
   name: Configure SSL
-  become: yes
+  become: true
   tasks:
     - name: Checking python
       package:

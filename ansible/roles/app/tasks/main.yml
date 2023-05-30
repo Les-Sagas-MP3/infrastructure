@@ -18,7 +18,7 @@
     group: "{{ linux_user }}"
 
 - name: Create version directory
-  become: yes
+  become: true
   file:
     path: "{{ install_dir }}/{{ version }}"
     state: directory

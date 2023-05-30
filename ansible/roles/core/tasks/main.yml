@@ -1,6 +1,6 @@
 
 - name: Create install directory
-  become: yes
+  become: true
   file:
     path: "{{ install_dir }}"
     state: directory
@@ -30,7 +30,7 @@
     mode: '0640'
 
 - name: Create version directory
-  become: yes
+  become: true
   file:
     path: "{{ install_dir }}/{{ version }}"
     state: directory
