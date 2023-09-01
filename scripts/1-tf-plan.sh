@@ -9,18 +9,18 @@ ENVIRONMENT_TEMPLATE=$1
 ENVIRONMENT_NAME="${2:-$1}"
 
 # Get GCP Buckets maching the Terraform states backend
-gcpBucketsJson=$(gcloud alpha storage buckets list --filter=id:$TF_STATES_BACKEND --format=json)
+gcpBucketsJson=$(gcloud storage buckets list --filter=name:$TF_STATES_BACKEND --format=json)
 gcpBucketsLength=$(echo $gcpBucketsJson | jq '. | length')
 
 # Create Terraform bucket if not exists
 if [ $gcpBucketsLength -eq 0 ]; then
     echo "▶️ Create GCP Bucket to store Terraform states"
-    gcloud alpha storage buckets create gs://$TF_STATES_BACKEND --location=$GCP_REGION
+    gcloud storage buckets create gs://$TF_STATES_BACKEND --location=$GCP_REGION
 fi
 
 # Init Terraform
 cd $PROJECT_PATH/terraform
-terraform init -backend-config="bucket=$TF_STATES_BACKEND" -backend-config="prefix=$ENVIRONMENT_NAME" -reconfigure
+terraform init -backend-config="bucket=$TF_STATES_BACKEND" -backend-config="prefix=$ENVIRONMENT_NAME" -reconfigure -upgrade
 
 # Set local variables
 export TF_VAR_ssh_user=$(whoami)

@@ -9,6 +9,12 @@
       force_apt_get: true
 
 - hosts: all
+  name: Install Monitoring components
+  become: true
+  roles:
+    - role: monitoring
+
+- hosts: all
   name: Create technical user
   become: true
   tasks:

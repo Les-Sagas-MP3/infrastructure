@@ -36,6 +36,7 @@ gcloud services enable cloudbuild.googleapis.com
 gcloud services enable compute.googleapis.com
 gcloud services enable dns.googleapis.com
 gcloud services enable iam.googleapis.com
+gcloud services enable osconfig.googleapis.com
 gcloud services enable secretmanager.googleapis.com
 gcloud services enable storage.googleapis.com
 
@@ -91,13 +92,13 @@ if [ $gcpServiceAccountsLength -eq 0 ]; then
 fi
 
 # Get CI Bucket
-gcpBucketsJson=$(gcloud alpha storage buckets list --filter=id:$GCP_CI_BUCKET_NAME --format=json)
+gcpBucketsJson=$(gcloud storage buckets list --filter=id:$GCP_CI_BUCKET_NAME --format=json)
 gcpBucketsLength=$(echo $gcpBucketsJson | jq '. | length')
 
 # Create CI bucket if not exists
 if [ $gcpBucketsLength -eq 0 ]; then
     echo "▶️ Create GCP Bucket for Cloud Build"
-    gcloud alpha storage buckets create gs://$GCP_CI_BUCKET_NAME --location=$GCP_REGION
+    gcloud storage buckets create gs://$GCP_CI_BUCKET_NAME --location=$GCP_REGION
 fi
 
 # Create secret for GitHub notifications
