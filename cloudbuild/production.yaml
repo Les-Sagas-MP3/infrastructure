@@ -30,6 +30,7 @@ steps:
   - 'TF_VAR_ssh_user=$_SSH_USER'
   - 'TF_VAR_environment_name=$_ENVIRONMENT_NAME'
   - 'TF_VAR_gcp_subnetwork_cidr=$_SUBNETWORK_CIDR'
+  - 'TF_VAR_notifications_email=$_NOTIFICATIONS_EMAIL'
   dir: 'terraform'
 
 - id: 'apply'

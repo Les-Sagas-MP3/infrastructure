@@ -26,6 +26,7 @@ steps:
   - 'TF_VAR_api_subdomain=api-$_ENVIRONMENT_NAME'
   - 'TF_VAR_app_subdomain=app-$_ENVIRONMENT_NAME'
   - 'TF_VAR_gcp_subnetwork_cidr=0.0.0.0/24'
+  - 'TF_VAR_notifications_email=example@example.org'
   dir: 'terraform'
 
 - id: 'apply'
