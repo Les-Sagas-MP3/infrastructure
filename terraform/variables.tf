@@ -57,8 +57,14 @@ variable "ssh_private_key" {
 
 variable "domain" {
   type        = string
-  description = "App subdomain"
+  description = "Project domain"
   default     = "les-sagas-mp3.fr"
+}
+
+variable "components" {
+  type        = map(any)
+  description = "Components"
+  default     = {}
 }
 
 variable "app_subdomain" {
@@ -93,4 +99,10 @@ variable "api_archive_url" {
   type        = string
   description = "API archive URL"
   default     = ""
+}
+
+variable "notifications_email" {
+  type        = string
+  description = "Email to which are sent notifications"
+  sensitive   = true
 }

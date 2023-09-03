@@ -92,7 +92,7 @@ if [ $gcpServiceAccountsLength -eq 0 ]; then
 fi
 
 # Get CI Bucket
-gcpBucketsJson=$(gcloud storage buckets list --filter=id:$GCP_CI_BUCKET_NAME --format=json)
+gcpBucketsJson=$(gcloud storage buckets list --filter=name:$GCP_CI_BUCKET_NAME --format=json)
 gcpBucketsLength=$(echo $gcpBucketsJson | jq '. | length')
 
 # Create CI bucket if not exists
