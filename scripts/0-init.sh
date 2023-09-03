@@ -33,6 +33,7 @@ gcloud config set project $gcpProjectId
 
 # Activate required APIs
 gcloud services enable cloudbuild.googleapis.com
+gcloud services enable cloudscheduler.googleapis.com
 gcloud services enable compute.googleapis.com
 gcloud services enable dns.googleapis.com
 gcloud services enable iam.googleapis.com
