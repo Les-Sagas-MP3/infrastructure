@@ -7,7 +7,7 @@
 
 - name: Add repository into sources list
   ansible.builtin.apt_repository:
-    repo: deb http://packages.cloud.google.com/apt google-compute-engine-focal-stable main
+    repo: deb [signed-by=/etc/apt/keyrings/gcloud.asc] http://packages.cloud.google.com/apt google-compute-engine-focal-stable main
     state: present
     filename: google-compute-engine.list
 
