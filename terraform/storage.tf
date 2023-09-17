@@ -3,7 +3,7 @@ resource "google_storage_bucket" "environment" {
   location      = var.gcp_region
   name          = "les-sagas-mp3-${var.environment_name}"
   storage_class = "STANDARD"
-  force_destroy = true
+  force_destroy = var.environment_name == "production" ? false : true
   lifecycle_rule {
     condition {
       matches_prefix = ["backup/"]
