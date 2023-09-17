@@ -6,7 +6,7 @@ resource "google_storage_bucket" "environment" {
   force_destroy = true
   lifecycle_rule {
     condition {
-      matches_prefix = "backup/"
+      matches_prefix = ["backup/"]
       age = 30
     }
     action {
