@@ -88,6 +88,7 @@ if [ $gcpServiceAccountsLength -eq 0 ]; then
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/storage.admin'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/secretmanager.secretAccessor'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/cloudbuild.builds.editor'
+    gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/resourcemanager.projectIamAdmin'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/iam.serviceAccountOpenIdTokenCreator'
     gcloud projects add-iam-policy-binding $gcpProjectId --member=serviceAccount:$GCP_CI_SA_NAME@$gcpProjectId.iam.gserviceaccount.com --role='roles/iam.serviceAccountTokenCreator'
 fi

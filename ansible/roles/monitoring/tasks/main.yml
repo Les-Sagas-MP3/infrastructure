@@ -1,15 +1,15 @@
-- name: Add repository into sources list
-  ansible.builtin.apt_repository:
-    repo: deb http://packages.cloud.google.com/apt google-compute-engine-focal-stable main
-    state: present
-    filename: google-compute-engine.list
-
 - name: Add GCloud GPG key
   ansible.builtin.get_url:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
     dest: /etc/apt/keyrings/gcloud.asc
     mode: '0644'
     force: true
+
+- name: Add repository into sources list
+  ansible.builtin.apt_repository:
+    repo: deb http://packages.cloud.google.com/apt google-compute-engine-focal-stable main
+    state: present
+    filename: google-compute-engine.list
 
 - name: "Install Google OS Agent"
   package:
