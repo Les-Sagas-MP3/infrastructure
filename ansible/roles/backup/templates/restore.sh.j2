@@ -8,15 +8,13 @@ PGDATABASE="{{ pg.database }}"
 PGUSERNAME="{{ pg.username }}"
 
 PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/postgres/bin:/usr/local/pgsql/bin
-DATE=`date +%Y-%m-%d`
+DATE=$1
 FOLDER=$OUTPUTDIR/$DATE
 
 mkdir -p $FOLDER
 
 FILENAME=$FOLDER/db.tar
 NOW=`date +%Y-%m-%d-%H:%M:%S`
-pg_dump -h $PGHOSTNAME -p $PGPORT -U $PGUSERNAME -f "$FILENAME" -F t $PGDATABASE 2>> "$OUTPUTDIR/backup.$NOW.error.log"
+pg_restore -h $PGHOSTNAME -p $PGPORT -U $PGUSERNAME -f "$FILENAME" -F t $PGDATABASE 2>> "$OUTPUTDIR/restore.$NOW.error.log"
 
-tar -czf $FOLDER/files.tar.gz {{ files_dir }}
-
-find $OUTPUTDIR -mtime +5 -type d | xargs rm -f -r;
+tar --overwrite -xzf $FOLDER/files.tar.gz -C /

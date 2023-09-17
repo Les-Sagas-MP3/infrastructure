@@ -30,7 +30,7 @@ variable "gcp_instance_zone" {
 variable "gcp_instance_type" {
   type        = string
   description = "GCP instance type"
-  default     = "e2-micro"
+  default     = "e2-small"
 }
 
 variable "environment_name" {

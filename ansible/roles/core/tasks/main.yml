@@ -63,8 +63,9 @@
     group: "{{ linux_user }}"
     state: link
 
-- name: Run daemon-reload to pick up config changes
-  systemd:
-    state: restarted
-    daemon_reload: yes
+- name: Run daemon-reload, enable service and restart it
+  systemd_service:
     name: les-sagas-mp3
+    state: restarted
+    enabled: true
+    daemon_reload: yes

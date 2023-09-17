@@ -4,7 +4,15 @@ resource "google_storage_bucket" "environment" {
   name          = "les-sagas-mp3-${var.environment_name}"
   storage_class = "STANDARD"
   force_destroy = true
-
+  lifecycle_rule {
+    condition {
+      matches_prefix = "backup/"
+      age = 30
+    }
+    action {
+      type = "Delete"
+    }
+  }
   labels = {
     environment = var.environment_name
     managedby   = "terraform"
