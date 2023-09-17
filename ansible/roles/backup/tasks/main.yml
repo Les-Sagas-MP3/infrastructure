@@ -3,10 +3,18 @@
     name: postgresql-client
     state: present
 
-- name: "Copy script"
+- name: "Copy backup script"
   template:
     src: backup.sh.j2
-    dest: "{{ script_location }}"
+    dest: "{{ script_location }}/backup.sh"
+    mode: 0755
+    owner: "{{ linux_user }}"
+    group: "{{ linux_user }}"
+
+- name: "Copy restore script"
+  template:
+    src: restore.sh.j2
+    dest: "{{ script_location }}/restore.sh"
     mode: 0755
     owner: "{{ linux_user }}"
     group: "{{ linux_user }}"

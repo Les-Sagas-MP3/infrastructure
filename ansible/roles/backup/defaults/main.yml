@@ -1,4 +1,4 @@
-script_location: /opt/les-sagas-mp3/backup.sh
+script_location: /opt/les-sagas-mp3
 files_dir: /opt/les-sagas-mp3/data/files
 output_dir: /opt/les-sagas-mp3/data/backup
 
