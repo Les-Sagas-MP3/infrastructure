@@ -3,7 +3,7 @@ resource "google_secret_manager_secret" "ssh_key_environment" {
   secret_id = "ssh_key_${var.environment_name}_${var.ssh_user}"
 
   replication {
-    automatic = true
+    auto {}
   }
 
   labels = {
