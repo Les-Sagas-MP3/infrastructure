@@ -74,6 +74,8 @@ resource "google_monitoring_alert_policy" "alert_policy" {
 
   notification_channels = [google_monitoring_notification_channel.email.id]
 
+  severity = lookup(each.value, "severity", "WARNING")
+
   user_labels = {
     environment = var.environment_name
     component   = each.key

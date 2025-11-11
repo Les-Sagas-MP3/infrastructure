@@ -8,7 +8,7 @@ steps:
   - ssh-keygen -t ed25519 -C "$_SSH_USER" -f $_SSH_KEY_PATH -P ""
 
 - id: 'init'
-  name: 'hashicorp/terraform:1.5.6'
+  name: 'hashicorp/terraform:1.13.5'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -17,7 +17,7 @@ steps:
   dir: 'terraform'
 
 - id: 'plan'
-  name: 'hashicorp/terraform:1.5.6'
+  name: 'hashicorp/terraform:1.13.5'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -37,7 +37,7 @@ steps:
   dir: 'terraform'
 
 - id: 'apply'
-  name: 'hashicorp/terraform:1.5.6'
+  name: 'hashicorp/terraform:1.13.5'
   entrypoint: 'sh'
   args: 
   - '-c'
@@ -57,7 +57,7 @@ steps:
     echo -e "" >> $_FIREBASE_CREDENTIALS_PATH
 
 - id: 'install'
-  name: 'cnieg/ansible:1.0.59-ansible-7.5.0-r0'
+  name: 'cnieg/ansible:1.0.91-ansible-10.2.0-r0'
   entrypoint: 'ash'
   args: 
   - '-c'

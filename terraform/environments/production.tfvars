@@ -11,6 +11,7 @@ components = {
     content        = "\"UP\""
     json_path      = "$.status"
     json_matcher   = "EXACT_MATCH"
+    severity       = "CRITICAL"
   }
   web : {
     host           = "app.les-sagas-mp3.fr"
@@ -18,5 +19,6 @@ components = {
     request_method = "GET"
     matcher        = "CONTAINS_STRING"
     content        = "<app-root></app-root>"
+    severity       = "CRITICAL"
   }
 }
